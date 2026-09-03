@@ -2,9 +2,8 @@ import os
 import requests
 import yfinance as yf
 
-TOKEN = os.environ.get("TELEGRAM_TOKEN")
-TOKEN = os.environ.get("TELEGRAM_TOKEN")
-C_ID = os.environ.get("TELEGRAM_CHAT_ID
+TOKEN = os.environ.get("TELEGRAM_TOKEN") 
+CID = os.environ.get("TELEGRAM_CHAT_ID
 
 
 
