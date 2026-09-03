@@ -3,7 +3,8 @@ import requests
 import yfinance as yf
 
 TOKEN = os.environ.get("TELEGRAM_TOKEN")
-CHAT_ID CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+
 
 
 def send_telegram_message(message):
