@@ -23,5 +23,5 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python -m pip install --upgrade pip
-          pip install -r gereksinimler.txt
+          pip install requests yfinance
           python bot.py
