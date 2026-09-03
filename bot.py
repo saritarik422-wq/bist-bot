@@ -2,22 +2,21 @@ import os
 import requests
 import yfinance as yf
 
-TOKEN = os.environ.get("TELEGRAM_TOKEN") 
-CID = os.environ.get("TELEGRAM_CHAT_ID
-
-
+TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CID = os.environ.get("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(message):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
+    payload = {"chat_id": CID, "text": message}
     try:
         response = requests.post(url, json=payload)
         response.raise_for_status()
     except Exception as e:
         print(f"Mesaj gönderilemedi: {e}")
+
 def check_bist():
-    tickers = ["EREGL.IS", "THYAO.IS", "ASELS.IS", "GARAN.IS", "KCHOL.IS", "TUPRS.IS"]
-    report = "📊 *BIST Günlük Volatilite ve Fiyat Raporu*\n\n"
+    tickers = ["EREGL.IS", "THYAO.IS", "ASELS.IS"]
+    report = "📊 *BIST Günlük Volatilite Raporu*\n\n"
     
     for ticker in tickers:
         try:
@@ -27,11 +26,11 @@ def check_bist():
                 current_price = hist['Close'].iloc[-1]
                 prev_price = hist['Close'].iloc[-2]
                 change = ((current_price - prev_price) / prev_price) * 100
-                report += f"🔹 *{ticker.replace('.IS', '')}*: {current_price:.2f} TL (%{change:+.2f})\n"
+                report += f"🔹 *{ticker}*: {current_price:.2f} TL (Değişim: %{change:.2f})\n"
         except Exception as e:
             print(f"{ticker} alınamadı: {e}")
             
     send_telegram_message(report)
+
 if __name__ == "__main__":
     check_bist()
-
