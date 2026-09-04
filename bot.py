@@ -20,17 +20,10 @@ def send_telegram_message(message):
     except Exception as e:
         print(f"Telegram mesajı gönderilemedi: {e}")
 
-def fetch_kap_news(symbol):
-    """
-    KAP ve Temel Haber Akışı Modülü:
-    Şirketlerin finansal raporları, özel durum açıklamaları ve temel verileri.
-    """
-    return f"KAP ve Bilanço Verisi: {symbol} için son dönem mali tablolar ve olası haber akışı izleniyor."
-
 def analyze_market_and_stocks():
     """
-    BIST 100 ve dinamik/sığ tahtaları en yüksek hassasiyetle tarayan,
-    en ufak hacim kıpırtısını bile kaçırmayan profesyonel motor.
+    Düşen bıçakları ve sahte tepkileri eleyen, net AL - BEKLE - SAT 
+    karar mekanizmasına sahip profesyonel tarama motoru.
     """
     # Genişletilmiş BIST Havuzu (BIST 30 + 50 + 100 & Dinamik / Sığ Hisseler)
     watchlist = [
@@ -40,60 +33,68 @@ def analyze_market_and_stocks():
         "KRDMD.IS", "ENKAI.IS", "MGROS.IS", "TCELL.IS", "ODAS.IS", "KONTR.IS"
     ]
     
-    report = "🚀 *HASSASİETİ ARTIRILMIŞ BIST FIRSAT TARAMA RAPORU*\n"
+    report = "🎯 *PROFESYONEL TREND SÜZGECİ & AL-BEKLE RAPORU*\n"
     report += "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
     
-    signal_found = False
+    actionable_signal_found = False
     
     for symbol in watchlist:
         try:
             ticker = yf.Ticker(symbol)
             hist = ticker.history(period="5d")
             
-            if len(hist) < 3:
+            if len(hist) < 5:
                 continue
                 
             current_price = hist['Close'].iloc[-1]
             prev_price = hist['Close'].iloc[-2]
             price_change = ((current_price - prev_price) / prev_price) * 100
             
-            current_volume = hist['Volume'].iloc[-1]
-            avg_volume = hist['Volume'].iloc[:-1].mean() # Son gün hariç ortalama hacim
+            # Son 5 günlük genel trend yönü (Düşüş trendinde mi, yükselişte mi?)
+            five_day_start = hist['Close'].iloc[0]
+            trend_change_5d = ((current_price - five_day_start) / five_day_start) * 100
             
-            # HASSAS SÜZGEÇ: Hacim ortalamanın 1.2 katına çıktıysa VE fiyat eksi değilse (veya hafif tepkideyse)
+            current_volume = hist['Volume'].iloc[-1]
+            avg_volume = hist['Volume'].iloc[:-1].mean()
+            
             is_volume_spike = current_volume > (avg_volume * 1.2)
-            is_price_healthy = price_change >= -1.5 # Çok esnek eşik, en ufak hareketi yakalar
+            
+            # --- KATİ TRADER KURALLARI (AL / BEKLE AYRIMI) ---
+            # 1. AL Şartı: Hacim artacak VE son 5 günlük ana trend pozitif (veya en azından yataydan yukarı dönüyor) olacak.
+            # 2. BEKLE/UZAK DUR: Hacim kıpırdasa bile 5 günlük trend ekside/düşüşteyse (Sasa vakası gibi) kesinlikle AL verilmez!
             
             report += f"🔹 *Hisse:* `{symbol}`\n"
-            report += f"   • Fiyat: `{current_price:.2f} TL` (%{price_change:+.2f})\n"
+            report += f"   • Fiyat: `{current_price:.2f} TL` (%{price_change:+.2f}) | 5g Trend: `%{trend_change_5d:+.2f}`\n"
             
-            if is_volume_spike and is_price_healthy:
-                signal_found = True
-                kap_info = fetch_kap_news(symbol)
-                
-                report += "   • 🚨 *ALARM (Hassas Yakalama):* Hacim kıpırtısı ve olası para girişi tespit edildi!\n"
-                report += f"   • 📰 *Temel & KAP Süzgeci:* {kap_info}\n"
+            if is_volume_spike and trend_change_5d > 0:
+                actionable_signal_found = True
+                report += "   🟢 *KARAR: AL / GÜÇLÜ FIRSAT*\n"
+                report += "   • 🚨 Hacim patlaması ve yükselen trend bir arada!\n"
                 report += f"   • 🎯 *Strateji:* Giriş: `{current_price:.2f} TL` | Hedef: `+{float(current_price)*1.04:.2f} TL` | Stop-Loss: `{float(current_price)*0.98:.2f} TL`\n"
-                report += "   • 💰 *Sermaye Kuralı:* Bu pozisyona kasanın en fazla **%10-15**'i ayrılmalıdır.\n"
+                report += "   • 💰 *Sermaye Kuralı:* Kasanın en fazla **%10-15**'i ayrılmalıdır.\n"
+            elif is_volume_spike and trend_change_5d <= 0:
+                report += "   🟡 *KARAR: BEKLE / TUZAK (Uzak Dur)*\n"
+                report += "   • ⚠️ *Uyarı:* Hacim var ancak 5 günlük ana trend negatifte (Sasa tipi tepki/tuzak ihtimali). İşlem açılmamalı!\n"
             else:
-                report += "   • 📊 *Durum:* Güvenli bantta izleniyor, hacim normal seviyede.\n"
+                report += "   📊 *KARAR: İZLE / NÖTR*\n"
+                report += "   • Güvenli bantta, belirgin bir ralli sinyali yok.\n"
                 
             report += "------------------------------------\n"
             
         except Exception as e:
             print(f"{symbol} analizinde hata: {e}")
             
-    if not signal_found:
-        report += "\n📌 *Genel Piyasa Özeti:* Hassas taramada bile eşiği aşan olağanüstü bir hareket gözlenmedi, sistem dinamik olarak nöbette.\n"
+    if not actionable_signal_found:
+        report += "\n📌 *Piyasa Özeti:* Trend onayı almayan hiçbir hareket 'AL' olarak değerlendirilmedi. Yanıltıcı hareketler filtrelendi, nakit disiplini korunuyor.\n"
         
-    report += "\n💡 *Not:* En küçük hacim hareketleri, temel analiz ve otonom risk kurallarıyla taranmıştır."
+    report += "\n💡 *Not:* Sadece trend onaylı ve hacim destekli profesyonel sinyaller raporlanır."
     return report
 
 if __name__ == "__main__":
-    print("Hassasiyeti artırılmış bot çalıştırılıyor...")
+    print("Trend süzgeçli bot çalıştırılıyor...")
     market_report = analyze_market_and_stocks()
     if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
         send_telegram_message(market_report)
-        print("Hassas rapor Telegram'a başarıyla iletildi.")
+        print("Akıllı Al-Bekle raporu Telegram'a başarıyla iletildi.")
     else:
         print("Telegram token veya chat ID eksik!")
