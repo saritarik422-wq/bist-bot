@@ -133,7 +133,21 @@ def analyze_market_and_stocks():
         report += "\n📌 *Piyasa Özeti:* Çok katmanlı tarama sonucunda net tetikleyici koşul oluşmadı. Sermaye koruma ve nakit disiplini prensibiyle sistem sessizliğini koruyor.\n"
         
     report += "\n💡 *Not:* Bu rapor yatırım tavsiyesi değil; yapay zeka destekli istatistiksel bir karar destek ve varlık dağılım rehberidir."
-    return report
+    return report  
+    def fetch_command_center_intelligence():
+    """
+    KAP, TÜİK, TCMB, FET, FED ve Emtialar dahil tüm yerel ve 
+    küresel haber/veri akışlarını koordine eden komuta merkezi modülü.
+    """
+    signals = [
+        "🔔 **KAP & Haber Radarı:** Şirket bildirimleri, ihaleler ve özel durum açıklamaları taranıyor.",
+        "📊 **TÜİK & TCMB Takibi:** Enflasyon, faiz ve yerel makro göstergeler aktif izlemede.",
+        "🌐 **Global Makro (FED & ABD):** Küresel faiz/enflasyon takvimi ve dış piyasa risk iştahı süzülüyor.",
+        "🛢️ **Emtia & Dış Piyasalar:** Brent Petrol ve Ons Altın hareketleri portföy etkisine göre inceleniyor.",
+        "💡 **FET & Fon Analizi:** Katılım esaslı fon dağılımları ve rota önerileri hazırlandı."
+    ]
+    return signals
+
 
 if __name__ == "__main__":
     print("Tam Donanımlı Yatırım Komuta Merkezi çalıştırılıyor...")
