@@ -1,3 +1,10 @@
+name: Nihai Savaş Odası Otomasyonu
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * 1-5' # Hafta içi her gün sabah 08:00'de çalışır
+
 jobs:
   run-bot:
     runs-on: ubuntu-latest
