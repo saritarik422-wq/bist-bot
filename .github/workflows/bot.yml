@@ -1,27 +1,26 @@
-name: BIST Stock Bot
+name: Borsa Savas Odasi Bot
 
 on:
   schedule:
-    - cron: '0 6 * * 1-5'
-  workflow_dispatch:
+    # Hafta içi Türkiye saati ile 10:00 - 18:00 arası her saat başı (UTC 07:00-15:00)
+    - cron: '0 7-15 * * 1-5'
+  workflow_dispatch: # Manuel tetikleme için
 
 jobs:
-  run-bot:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Run Bot and Install Dependencies
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install requests yfinance
-          python bot.py
+          pip install requests yfinance pandas numpy
+
+      - name: Run Bot
+        run: python bot.py
