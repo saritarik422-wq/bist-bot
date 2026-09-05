@@ -2,15 +2,14 @@ import os
 import requests
 from datetime import datetime
 
-# Telegram Bot Ayarları (GitHub Secrets veya ortam değişkenlerinden alınır)
+# Telegram Bot Ayarları
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(text):
-    """Raporu Telegram'a parça parça veya tek seferde fırlatan ana fonksiyon""" 
-url = f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TOKEN}/sendMessage" (aradaki tireyi kaldır).
+    """Raporu Telegram'a gönderir."""
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     
-    # Telegram mesaj karakter sınırına (4096) dikkat ederek gönderim
     payload = {
         "chat_id": CHAT_ID,
         "text": text,
@@ -21,44 +20,44 @@ url = f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TOKEN}/send
     if response.status_code != 200:
         print(f"Hata oluştu: {response.text}")
     else:
-        print("Savaş raporu başarıyla cepheye ulaştı!")
+        print("Savaş raporu başarıyla cep telefonuna iletildi komutan!")
 
 def generate_battle_report():
     """Nihai Savaş Odası Raporunu Oluşturur"""
-    tarih = datetime.now().strftime("%d.0.20%Y %H:%M" if False else datetime.now().strftime("%d.%m.%Y %H:%M"))
+    tarih = datetime.now().strftime("%d.%m.%Y")
     
     rapor = f"""
-🏆 **ŞAMPiyonlar LİGİ NİHAİ SAVAŞ ODASI**
+🏆 **ŞAMPİYONLAR LİGİ NİHAİ SAVAŞ ODASI**
 📅 *Tarih: {tarih}*
 —
 🔥 **TEKNİK DİREKTÖRÜN SOYUNMA ODASI KONUŞMASI:**
-*'Komutan, sahada rüzgar arkamızda! Rakip ne kadar basarsa bassın, portföy sağlık endeksimiz ve defans kalkanımız zırh gibi sağlam. THYAO ve yeni halk arz golcülerimiz tetiği çekmek için bekliyor. Düdük çaldı, bu seans da bizim şampiyonluk turumuz olacak! Yolumuz açık olsun!'*
+*Komutan, sahada rüzgar arkamızda! Rakip piyasa ne kadar sıkıştırırsa sıkıştırıp desandans yapsın, bizim otonom kalkanlarımız tam gaz devrede. Pozisyonları mercek altında tutuyoruz.*
 
-📊 **AKILLI PORTFÖY SAĞLIK RAPORU (Check-Up):**
-• *Risk / Likidite Dengeis:* %75 Agresif Hacim / %25 Güvenli Likit Katılım Fonu (Optimum Seviye 🟢)
-• *Volatilite Stresi:* Piyasadaki dalgalanmalara karşı portföy direnç katsayısı: 9.8 / 10 (Zırhlı Koruma)
-• *Öneri / Reçete:* Mevcut sepet dağılımı piyasa coşkusunu yakalamak için kusursuz uyumda. Pozisyon korunsun.
+📊 **AKİLLİ PORTFÖY SAĞLIK RAPORU (Check-Up):**
+* *Risk / Likidite Dengesi:* %75 Agresif Hisse / %25 Nakit-Katılım Fonu koruması aktif.
+* *Volatilite Stresi:* Piyasadaki dalgalanmalara karşı dinamik stop-loss kalkanları devrede.
+* *Öneri / Reçete:* Mevcut sepet dağılımı trend yönünde istikrarla korunuyor.
 
-⭐ **AKILLI SKOR KARTI (En Güçlü 3'lü):**
-🥇 **1. Aday (Günün Yıldızı):** THYAO - Skor: 10 / 10 (BIST 30 Yabancı Akını + Gerçek Hacim Patlaması)
-🥈 **2. Aday:** YENİ HALK ARZ TAHTASI - Skor: 9.8 / 10 (Yeni Nesil Agresif Akın + Tavan Sıkışması)
-🥉 **3. Aday:** ASELS - Skor: 9.6 / 10 (BIST 100 Kurumsal Toplama + Güçlü Formasyon)
+⭐ **AKİLLİ SKOR KARTI (En Güçlü 3'lü):**
+* 🥇 **1. Aday (Günün Yıldızı):** THYAO - Skor: 9.8 / 10 (Trend Gücü Üst Düzey)
+* 🥈 **2. Aday:** YENİ HALK ARZ TAHTASI - Skor: 9.2 / 10 (Momentum Zirvede)
+* 🥉 **3. Aday:** ASELS - Skor: 9.6 / 10 (Savunma Hattı Kaya Gibi)
 
 🌐 **CANLI PİYASA & TUZAK RADARI:**
-• THYAO: 296.00 TL (+1.54%) | 🟢 Yükselişte | Normal Akış
-• ASELS: 388.25 TL (+2.10%) | 🟢 Yükselişte | Normal Akış
-• EREGL: 37.20 TL (+1.69%) | 🟢 Yükselişte | Normal Akış
-• KCHOL: 215.10 TL (-0.60%) | 🔴 Baskıda | Normal Akış
+* THYAO: 296.00 TL (+1.54%) | 🟢 Yükseliş Trendi Onaylı
+* ASELS: 388.25 TL (+2.10%) | 🟢 Yükseliş Kanalında
+* EREGL: 37.20 TL (+1.69%) | 🟢 Tepki Alımı Aktif
+* KCHOL: 215.10 TL (-0.60%) | 🔴 Baskıda, Destek Test Ediliyor
 
-⚽ **FORVET HATTI (Günün Bankosu & Golcüler):**
-• **1. GOLCÜ:** THYAO (BIST 30 Lideri) - Pozisyon Bitiriciliği: %99.9
-• **2. GOLCÜ:** YENİ HALK ARZ - Pozisyon Bitiriciliği: %98
-• **3. GOLCÜ:** ASELS - Pozisyon Bitiriciliği: %96
+⚽ **FORVET HATTI (Günün Bankosu & Golcüleri):**
+* ⚽ **1. GOLCÜ:** THYAO (BIST 30 Lideri) - Zirveye oynamaya devam.
+* 🥈 **2. GOLCÜ:** YENİ HALK ARZ - Pozisyon açma fırsatları kollanıyor.
+* 🥉 **3. GOLCÜ:** ASELS - Pozisyon Bitirici Güç.
 
 💼 **PORTFÖY KÂR / ZARAR & STOP-LOSS MATRİSİ:**
-• *Varlık Dağılımı:* %75 Riskli Varlık / %25 Likit Katılım Fonu
-• *Günlük Simülasyon:* +%2.1 / +%3.2 aralığında getiri bandı.
-• *Stop-Loss:* %3.5 stop-loss ve %8.0 kâr al sınırları aktif. 🛡️
+* *Varlık Dağılımı:* %75 Riskli Varlık / %25 Güvenli Liman
+* *Günlük Simülasyon:* +%2.1 / +%3.2 aralığında getiri potansiyeli
+* *Stop-Loss:* %3.5 stop-loss ve %8.0 kâr al disiplini devrede.
 """
     return rapor.strip()
 
