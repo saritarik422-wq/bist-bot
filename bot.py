@@ -2,8 +2,8 @@ import os
 import requests
 from datetime import datetime
 
-# Telegram Bot Ayarları
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+# Telegram Bot Ayarları (GitHub Secrets ile birebir uyumlu)
+TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(text):
@@ -27,21 +27,21 @@ def generate_battle_report():
     tarih = datetime.now().strftime("%d.%m.%Y")
     
     rapor = f"""
-🏆 **ŞAMPİYONLAR LİGİ NİHAİ SAVAŞ ODASI**
+🏆 **ŞAMPİYONlar LİGİ NİHAİ SAVAŞ ODASI**
 📅 *Tarih: {tarih}*
 —
 🔥 **TEKNİK DİREKTÖRÜN SOYUNMA ODASI KONUŞMASI:**
-*Komutan, sahada rüzgar arkamızda! Rakip piyasa ne kadar sıkıştırırsa sıkıştırıp desandans yapsın, bizim otonom kalkanlarımız tam gaz devrede. Pozisyonları mercek altında tutuyoruz.*
+*Komutan, sahada rüzgar arkamızda! Otonom sistemler ve kalkanlar tam gaz devrede. Pozisyonlar mercek altında.*
 
 📊 **AKİLLİ PORTFÖY SAĞLIK RAPORU (Check-Up):**
 * *Risk / Likidite Dengesi:* %75 Agresif Hisse / %25 Nakit-Katılım Fonu koruması aktif.
-* *Volatilite Stresi:* Piyasadaki dalgalanmalara karşı dinamik stop-loss kalkanları devrede.
-* *Öneri / Reçete:* Mevcut sepet dağılımı trend yönünde istikrarla korunuyor.
+* *Volatilite Stresi:* Dinamik stop-loss kalkanları devrede.
+* *Öneri / Reçete:* Mevcut sepet dağılımı trend yönünde korunuyor.
 
 ⭐ **AKİLLİ SKOR KARTI (En Güçlü 3'lü):**
-* 🥇 **1. Aday (Günün Yıldızı):** THYAO - Skor: 9.8 / 10 (Trend Gücü Üst Düzey)
-* 🥈 **2. Aday:** YENİ HALK ARZ TAHTASI - Skor: 9.2 / 10 (Momentum Zirvede)
-* 🥉 **3. Aday:** ASELS - Skor: 9.6 / 10 (Savunma Hattı Kaya Gibi)
+* 🥇 **1. Aday (Günün Yıldızı):** THYAO - Skor: 9.8 / 10
+* 🥈 **2. Aday:** YENİ HALK ARZ TAHTASI - Skor: 9.2 / 10
+* 🥉 **3. Aday:** ASELS - Skor: 9.6 / 10
 
 🌐 **CANLI PİYASA & TUZAK RADARI:**
 * THYAO: 296.00 TL (+1.54%) | 🟢 Yükseliş Trendi Onaylı
@@ -50,9 +50,9 @@ def generate_battle_report():
 * KCHOL: 215.10 TL (-0.60%) | 🔴 Baskıda, Destek Test Ediliyor
 
 ⚽ **FORVET HATTI (Günün Bankosu & Golcüleri):**
-* ⚽ **1. GOLCÜ:** THYAO (BIST 30 Lideri) - Zirveye oynamaya devam.
-* 🥈 **2. GOLCÜ:** YENİ HALK ARZ - Pozisyon açma fırsatları kollanıyor.
-* 🥉 **3. GOLCÜ:** ASELS - Pozisyon Bitirici Güç.
+* ⚽ **1. GOLCÜ:** THYAO (BIST 30 Lideri)
+* 🥈 **2. GOLCÜ:** YENİ HALK ARZ
+* 🥉 **3. GOLCÜ:** ASELS
 
 💼 **PORTFÖY KÂR / ZARAR & STOP-LOSS MATRİSİ:**
 * *Varlık Dağılımı:* %75 Riskli Varlık / %25 Güvenli Liman
