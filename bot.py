@@ -10,20 +10,29 @@ TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(message):
-    """Telegram üzerinden bildirim gönderir."""
+    """Telegram üzerinden bildirim gönderir (4096 karakter sınırına karşı akıllı parçalama destekli)."""
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram kimlik bilgileri eksik!")
         return
     
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": message,
-        "parse_mode": "Markdown"
-    }
-    response = requests.post(url, json=payload)
-    if response.status_code != 200:
-        print(f"Telegram mesajı gönderilemedi: {response.text}")
+    
+    # Telegram karakter sınırı (~4000 karakter güvenli sınır)
+    max_length = 4000
+    if len(message) > max_length:
+        parts = [message[i:i+max_length] for i in range(0, len(message), max_length)]
+    else:
+        parts = [message]
+        
+    for part in parts:
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": part,
+            "parse_mode": "Markdown"
+        }
+        response = requests.post(url, json=payload)
+        if response.status_code != 200:
+            print(f"Telegram mesajı gönderilemedi: {response.text}")
 
 def fetch_live_market_data():
     """Yahoo Finance üzerinden anlık tarama, hacim patlaması ve acil alarm kontrolü."""
@@ -299,7 +308,7 @@ def run_trading_command_center():
     report += f"💡 **Not:** Karar destek amaçlıdır, yatırım tavsiyesi değildir.\n\n"
     report += f"🚀 *Dünyanın En Kusursuz, Noktalanmış Savaş Odası Görevde!*"
 
-    # Telegram'a Gönder
+    # Telegram'a Gönder (Parçalanarak iletilir)
     send_telegram_message(report)
     print("Nihai savaş odası raporu ve portföy sağlık check-up'ı Telegram'a gönderildi.")
 
