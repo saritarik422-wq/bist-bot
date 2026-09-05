@@ -7,8 +7,8 @@ TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(text):
-    """Raporu Telegram'a parça parça veya tek seferde fırlatan ana fonksiyon"""
-    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+    """Raporu Telegram'a parça parça veya tek seferde fırlatan ana fonksiyon""" 
+url = f"[https://api.telegram.org/bot](https://api.telegram.org/bot){TOKEN}/sendMessage" (aradaki tireyi kaldır).
     
     # Telegram mesaj karakter sınırına (4096) dikkat ederek gönderim
     payload = {
