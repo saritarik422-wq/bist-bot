@@ -1,16 +1,8 @@
-name: Nihai Savaş Odası Otomasyonu
-
-on:
-  schedule:
-    # Her hafta içi sabah 09:55'te çalışır (UTC saatine göre ayarlanır)
-    - cron: '25 6 * * 1-5'
-  workflow_dispatch:
-
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: Kodları Çek
+      - name: Post Kodları Çek
         uses: actions/checkout@v4
 
       - name: Python Kurulumu
@@ -23,6 +15,6 @@ jobs:
 
       - name: Botu Çalıştır
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python bot.py
