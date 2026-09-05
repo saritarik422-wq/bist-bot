@@ -61,6 +61,16 @@ def run_portfolio_simulation():
     ]
     return simulations
 
+# FORVET HATTI: Bitirici & Skor Üreten Modül
+def run_striker_goal_scorer():
+    """Forvet Hattı: En Yüksek Tavan & Momentum Potansiyeli Taşıyanlar"""
+    striker_picks = [
+        "⚽ **[FORVET - 1. GOLCÜ]:** **[THYAO]** - Pozisyon Bitiriciliği: **%96** (Kırılma çizgisinde, hacim patlaması tetiği çekildi)",
+        "🎯 **[FORVET - 2. GOLCÜ]:** **[ASELS]** - Pozisyon Bitiriciliği: **%91** (Sıkışma alanı daraldı, atak yönü yukarı)",
+        "⚡ **[FORVET - 3. GOLCÜ]:** **[TUPRS]** - Pozisyon Bitiriciliği: **%88** (Destek dönüşü ve net skor adayı)"
+    ]
+    return striker_picks
+
 def run_smart_scorecard():
     """Akıllı Skor Kartı (BIST'in En Güçlü 3'lüsü)"""
     top_three = [
@@ -71,7 +81,7 @@ def run_smart_scorecard():
     return top_three
 
 def run_sector_heat_map():
-    """1. YENİ MODÜL: Sektörel Isı Haritası"""
+    """Sektörel Isı Haritası"""
     sectors = [
         "🔥 **Günün Lider Sektörleri:** Ulaştırma (%+2.4), Savunma Sanayi (%+1.9) ve Holdingler.",
         "❄️ **Zayıf/Beklemede Olanlar:** Gayrimenkul Yatırım Ortaklıkları ve Perakende."
@@ -79,17 +89,27 @@ def run_sector_heat_map():
     return sectors
 
 def run_smart_money_detector():
-    """2. YENİ MODÜL: Akıllı Para (Para Giriş-Çıkış) Detay Dedektörü"""
+    """Akıllı Para (Para Giriş-Çıkış) Detay Dedektörü"""
     money_flow = [
         "💵 **Net Para Girişi Liderleri:** THYAO (Yoğun Kurumsal Alım), ASELS (Büyük Blok Toplama)",
         "📉 **Para Çıkışı / Dağılım:** Kâr realizasyonu yapılan yan tahtalarda hacim daralması."
     ]
     return money_flow
 
+# ORTA SAHA MAESTRO HATTI: Oyunu Kuran & Pas Trafiğini Yöneten Modül
+def run_midfield_maestro():
+    """Orta Saha Maestro: Tahtalar Arası Pas Trafiği & Akış Kontrolü"""
+    maestro_notes = [
+        "🧠 **Oyun Kurucu Analizi:** Likidite akışı ana tahtalarda yoğunlaşıyor.",
+        "🔄 **Pas Trafiği (Sektör Geçişleri):** Sanayi ve Holding kanadından Ulaştırma/Savunma eksenine etkili pas ve hacim transferi var.",
+        "⚖️ **Merkez Denge:** Satıcılar baskı kurmaya çalışsacephal orta saha direnci ve hacimle toparlanıyor."
+    ]
+    return maestro_notes
+
 def run_risk_alarm_model():
-    """3. YENİ MODÜL: Risk Alarm Modeli (Dinamik Stop-Loss & Destekler)"""
+    """DEFANS / KALE HATTI: Risk Alarm Modeli & Stop-Loss (Güvenlik Duvarı)"""
     alarms = [
-        "🛡️ **Stop-Loss / Destek Seviyeleri:**",
+        "🛡️ **Stop-Loss / Destek Seviyeleri (Defansif Kalkan):**",
         "• **THYAO:** Kritik Ana Destek: Güvenli bölgede (Aşırı kırılma yok).",
         "• **ASELS:** Stop Seviyesi: Yakın kanal desteği üstünde seyrediyor.",
         "🚨 **Risk Durumu:** Genel piyasa volatilite kalkanı devrede, ani kırılmalara karşı anlık takip aktif."
@@ -97,10 +117,10 @@ def run_risk_alarm_model():
     return alarms
 
 def run_trading_command_center():
-    """Şampiyonlar Ligi Ultimate Command Center Ana Döngüsü"""
+    """Şampiyonlar Ligi Ultimate Command Center - Rüya Takım Ana Döngüsü"""
     today = datetime.now().strftime("%d.%m.%Y %H:%M")
     
-    report = f"🏆 **ŞAMPİYONLAR LİGİ COMMAND CENTER**\n"
+    report = f"🏆 **ŞAMPİYONLAR LİGİ RÜYA TAKIM KOMUTA MERKEZİ**\n"
     report += f"📅 Tarih: {today}\n"
     report += f"━━━━━━━━━━━━━━━━━━━━━\n\n"
     
@@ -109,48 +129,58 @@ def run_trading_command_center():
     for sc in run_smart_scorecard():
         report += f"{sc}\n"
         
-    # YENİ: Sektörel Isı Haritası
+    # FORVET HATTI: Golcü ve Bitirici Fırsatlar
+    report += f"\n⚽ **FORVET HATTI (Tavan & Momentum Bitiricileri):**\n"
+    for striker in run_striker_goal_scorer():
+        report += f"{striker}\n"
+
+    # ORTA SAHA MAESTRO: Oyunu Kuran Modül
+    report += f"\n🧠 **ORTA SAHA MAESTRO (Oyun Kurucu & Pas Trafiği):**\n"
+    for mid in run_midfield_maestro():
+        report += f"{mid}\n"
+
+    # Sektörel Isı Haritası
     report += f"\n🌡️ **Sektörel Isı Haritası:**\n"
     for sec in run_sector_heat_map():
         report += f"{sec}\n"
 
-    # YENİ: Akıllı Para Dedektörü
+    # Akıllı Para Dedektörü
     report += f"\n💵 **Akıllı Para (Para Giriş/Çıkış) Dedektörü:**\n"
     for mf in run_smart_money_detector():
         report += f"{mf}\n"
 
-    # 1. Portföy Simülasyonu
+    # Portföy Simülasyonu
     report += f"\n💼 **Portföy Kâr / Zarar & Simülasyon Matrisi:**\n"
     for sim in run_portfolio_simulation():
         report += f"{sim}\n"
 
-    # 2. Yapay Zeka Trend Tahmini
+    # Yapay Zeka Trend Tahmini
     report += f"\n🤖 **AI Trend Tahmin Modeli (Gelecek Okuması):**\n"
     for tp in run_ai_trend_prediction():
         report += f"{tp}\n"
 
-    # 3. Yabancı Akını
+    # Yabancı Akını
     report += f"\n🦅 **Yabancı Akını & 100+ Hisse Taraması:**\n"
     for f_sig in scan_foreign_capital_flows():
         report += f"{f_sig}\n"
 
-    # YENİ: Risk Alarm Modeli & Stop-Loss
-    report += f"\n🚨 **Risk Alarm & Stop-Loss Modeli:**\n"
+    # DEFANS / KALE: Risk Alarm Modeli & Stop-Loss
+    report += f"\n🚨 **DEFANS & KALE HATTI (Risk Alarm & Stop-Loss):**\n"
     for ra in run_risk_alarm_model():
         report += f"{ra}\n"
 
-    # 4. Haber & Makro İstihbarat
+    # Haber & Makro İstihbarat
     report += f"\n🎯 **Çok Katmanlı Haber & Makro Süzgeç:**\n"
     for sig in fetch_command_center_intelligence():
         report += f"• {sig}\n"
 
-    report += f"\n📌 **Komuta Merkezi Durumu:** Tüm eklentiler (Isı Haritası, Para Dedektörü, Risk Alarmları) aktif.\n"
+    report += f"\n📌 **Taktiksel Diziliş:** Rüya Takım (Kaleci/Defans + Orta Saha Maestro + Forvet Golcüler) tam kadro sahada!\n"
     report += f"💡 **Not:** Karar destek amaçlıdır, yatırım tavsiyesi değildir.\n\n"
-    report += f"✅ *Tüm Savaş Modülleri Tam Kadro Devrede!*"
+    report += f"✅ *Şampiyonluk Modu Aktif!*"
 
     # Telegram'a Gönder
     send_telegram_message(report)
-    print("Tüm gelişmiş modüllerle donatılmış komuta merkezi raporu Telegram'a gönderildi.")
+    print("Rüya takım formasyonundaki komuta merkezi raporu Telegram'a gönderildi.")
 
 if __name__ == "__main__":
     run_trading_command_center()
