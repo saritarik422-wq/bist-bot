@@ -21,15 +21,22 @@ def send_telegram_message(text):
     print("Savaş raporu başarıyla cep telefonuna iletildi komutan!")
 
 def generate_battle_report():
-    """Nihai Savaş Odası Raporunu Oluşturur"""
+    """Nihai Savaş Odası Raporunu ve Haftalık Disiplin Matrisini Oluşturur"""
     tarih = datetime.now().strftime("%d.%m.%Y")
+    gun_ismi = datetime.now().strftime("%A")
     
+    # Haftalık disiplin kontrolü (Pazartesi günleri sepet/fon hatırlatması ekler)
+    pazartesi_notu = ""
+    if gun_ismi.lower() in ["monday", "pazartesi"]:
+        pazartesi_notu = "\n🔔 **HAFTALIK DİSİPLİN ALARMI:** Bugün düzenli aylık/haftalık yatırım fonu ve hisse sepeti alım günüdür komutan! Emirler sıraya dizilsin."
+
     rapor = f"""
 🏆 **ŞAMPİYONLAR LİGİ NİHAİ SAVAŞ ODASI**
 📅 *Tarih: {tarih}*
 —
 🔥 **TEKNİK DİREKTÖRÜN SOYUNMA ODASI KONUŞMASI:**
 *Komutan, sahada rüzgar arkamızda! Otonom kalkanlar ve risk yönetim sistemimiz tam gaz devrede. Piyasayı mercek altında tutmaya devam ediyoruz.*
+{pazartesi_notu}
 
 📊 **AKİLLİ PORTFÖY SAĞLIK RAPORU (Check-Up):**
 * *Risk / Likidite Dengesi:* %75 Agresif Hisse / %25 Nakit-Katılım Fonu koruması aktif.
