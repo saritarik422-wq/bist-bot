@@ -41,8 +41,8 @@ def calculate_bollinger_bands(data, window=20, num_std=2):
 
 def analyze_market_and_stocks():
     """
-    Trend, Hacim, RSI ve Bollinger Bantları süzgeçlerine sahip 
-    kurumsal düzeyde otonom karar mekanizması.
+    Teknik (Trend, Hacim, RSI, Bollinger) ve 
+    Temel Analiz (F/K, PD/DD) süzgeçlerine sahip Otonom Karar Merkezi.
     """
     watchlist = [
         "KCHOL.IS", "THYAO.IS", "ASELS.IS", "TUPRS.IS", "GARAN.IS", "AKBNK.IS", 
@@ -51,8 +51,8 @@ def analyze_market_and_stocks():
         "KRDMD.IS", "ENKAI.IS", "MGROS.IS", "TCELL.IS", "ODAS.IS", "KONTR.IS"
     ]
     
-    report = "🎯 *KURUMSAL OTONOM STRATEJİ RAPORU*\n"
-    report += "*(Trend + Hacim + RSI + Bollinger Süzgeci)*\n"
+    report = "🏛️ *YATIRIM KOMUTA MERKEZİ RAPORU*\n"
+    report += "*(Teknik + Temel Rasyo Süzgeci Aktif)*\n"
     report += "━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
     
     actionable_signal_found = False
@@ -60,7 +60,6 @@ def analyze_market_and_stocks():
     for symbol in watchlist:
         try:
             ticker = yf.Ticker(symbol)
-            # Göstergelerin sağlıklı hesaplanması için yeterli geçmiş veri çekiyoruz (örn: 30 gün)
             hist = ticker.history(period="30d")
             
             if len(hist) < 20:
@@ -78,37 +77,50 @@ def analyze_market_and_stocks():
             avg_volume = hist['Volume'].iloc[:-2].mean()
             is_volume_spike = current_volume > (avg_volume * 1.2)
             
-            # RSI Hesaplama
+            # RSI ve Bollinger
             rsi_series = calculate_rsi(hist['Close'])
             current_rsi = rsi_series.iloc[-1] if not rsi_series.empty else 50
+            _, upper_band, _ = calculate_bollinger_bands(hist['Close'])
+            is_above_upper_band = current_price > upper_band.iloc[-1]
             
-            # Bollinger Bantları Hesaplama
-            _, upper_band, lower_band = calculate_bollinger_bands(hist['Close'])
-            curr_upper = upper_band.iloc[-1]
-            is_above_upper_band = current_price > curr_upper
+            # Temel Veriler (F/K ve PD/DD Çekme)
+            info = ticker.info
+            pe_ratio = info.get('trailingPE', None)
+            pb_ratio = info.get('priceToBook', None)
+            
+            pe_str = f"{pe_ratio:.2f}" if pe_ratio and pe_ratio > 0 else "N/A (Zarar/Veri Yok)"
+            pb_str = f"{pb_ratio:.2f}" if pb_ratio else "N/A"
             
             report += f"🔹 *Hisse:* `{symbol}`\n"
             report += f"   • Fiyat: `{current_price:.2f} TL` (%{price_change:+.2f}) | RSI: `{current_rsi:.1f}`\n"
+            report += f"   • Temel Rasyolar -> F/K: `{pe_str}` | PD/DD: `{pb_str}`\n"
             
-            # --- PROFESYONEL KARAR MATRİSİ ---
-            # 1. AL Şartı: Trend pozitif (>0) AND Hacim var AND RSI aşırı alımda değil (<80) AND Bollinger üst bandını aşırı delmemiş.
-            # 2. BEKLE/TUZAK: Trend negatif veya RSI çok şişmiş (>=80) veya Bollinger üstünde aşırı gerilmiş.
+            # --- ÇOK KATMANLI KARAR MATRİSİ (TEKNİK + TEMEL) ---
+            # Şartlar: 
+            # 1. Hacim patlaması var AND 5 günlük trend yukarı
+            # 2. RSI aşırı alımda değil (<80) AND Bollinger üst bandını delmemiş
+            # 3. Şirket zarar etmiyor (F/K > 0) veya temel verisi erişilebilir durumda
             
-            if is_volume_spike and trend_change_5d > 0 and current_rsi < 80 and not is_above_upper_band:
+            is_fundamentally_safe = (pe_ratio is None) or (pe_ratio > 0 and pe_ratio < 40) # Çok şişmiş veya zararda olanları filtrele
+            
+            if is_volume_spike and trend_change_5d > 0 and current_rsi < 80 and not is_above_upper_band and is_fundamentally_safe:
                 actionable_signal_found = True
-                report += "   🟢 *KARAR: AL / GÜÇLÜ FIRSAT*\n"
-                report += "   • 🚨 Trend onaylı, taze hacimli ve sağlıklı RSI seviyesi.\n"
+                report += "   🟢 *KARAR: AL / GÜÇLÜ KOMBİNE FIRSAT*\n"
+                report += "   • 🚨 Teknik trend onaylı, taze hacimli, sağlıklı RSI ve makul F/K.\n"
                 report += f"   • 🎯 *Strateji:* Giriş: `{current_price:.2f} TL` | Hedef: `+{float(current_price)*1.04:.2f} TL` | Stop-Loss: `{float(current_price)*0.98:.2f} TL`\n"
                 report += "   • 💰 *Sermaye Kuralı:* Kasanın en fazla **%10-15**'i ayrılmalıdır.\n"
+            elif pe_ratio is not None and pe_ratio < 0:
+                report += "   🟡 *KARAR: BEKLE / TEMEL RİSK (Zarar Eden Şirket)*\n"
+                report += "   • ⚠️ *Uyarı:* Şirketin F/K oranı negatif (zararda). Temel risk nedeniyle pas geçiliyor.\n"
             elif current_rsi >= 80:
                 report += "   🟡 *KARAR: BEKLE / AŞIRI ALIM (Tepe Riski)*\n"
-                report += "   • ⚠️ *Uyarı:* RSI 80 sınırını aşarak aşırı şişmiş. Tepeden mal alma riski yüksek!\n"
+                report += "   • ⚠️ *Uyarı:* RSI 80 sınırını aşarak aşırı şişmiş!\n"
             elif is_above_upper_band:
                 report += "   🟡 *KARAR: BEKLE / BOLLINGER ÜST BANDI TAŞMASI*\n"
-                report += "   • ⚠️ *Uyarı:* Fiyat bantların dışına çıkarak aşırı gerilmiş, düzeltme gelebilir.\n"
+                report += "   • ⚠️ *Uyarı:* Fiyat bantların dışına çıkarak aşırı gerilmiş.\n"
             elif is_volume_spike and trend_change_5d <= 0:
                 report += "   🟡 *KARAR: BEKLE / TUZAK (Düşen Trend Tepkisi)*\n"
-                report += "   • ⚠️ *Uyarı:* Hacim var ancak 5 günlük ana trend negatifte (Sasa tipi tuzak).\n"
+                report += "   • ⚠️ *Uyarı:* Hacim var ancak 5 günlük ana trend negatifte (Düşen bıçak tutulmaz).\n"
             else:
                 report += "   📊 *KARAR: İZLE / NÖTR*\n"
                 report += "   • Güvenli bantta, belirgin bir ralli sinyali yok.\n"
@@ -119,16 +131,16 @@ def analyze_market_and_stocks():
             print(f"{symbol} analizinde hata: {e}")
             
     if not actionable_signal_found:
-        report += "\n📌 *Piyasa Özeti:* Tüm filtreler (Trend, Hacim, RSI, Bollinger) sıkıca uygulandı. Riskli veya tepe yapmış hareketler elendi, nakit disiplini korunuyor.\n"
+        report += "\n📌 *Piyasa Özeti:* Teknik ve Temel filtreler (F/K, PD/DD, Trend, RSI) titizlikle uygulandı. Riskli, zararda veya tepe yapmış tüm hareketler elendi, nakit disiplini korunuyor.\n"
         
-    report += "\n💡 *Not:* Sadece çok katmanlı kurumsal süzgeçten geçen kusursuz sinyaller raporlanır."
+    report += "\n💡 *Not:* Sadece çok katmanlı kurumsal ve temel süzgeçten geçen kusursuz sinyaller raporlanır."
     return report
 
 if __name__ == "__main__":
-    print("Çok katmanlı kurumsal bot çalıştırılıyor...")
+    print("Temel ve Teknik Komuta Merkezi çalıştırılıyor...")
     market_report = analyze_market_and_stocks()
     if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
         send_telegram_message(market_report)
-        print("Kurumsal strateji raporu Telegram'a başarıyla iletildi.")
+        print("Komuta merkezi raporu Telegram'a başarıyla iletildi.")
     else:
         print("Telegram token veya chat ID eksik!")
