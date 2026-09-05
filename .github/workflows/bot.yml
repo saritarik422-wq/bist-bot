@@ -1,29 +1,28 @@
-name: Borsa Savas Odasi Bot
+name: Nihai Savaş Odası Otomasyonu
 
 on:
   schedule:
-    # Hafta içi Türkiye saati ile 10:00 - 18:00 arası her saat başı (UTC 07:00-15:00)
-    - cron: '0 7-15 * * 1-5'
-  workflow_dispatch: # Manuel tetikleme için
+    # Her hafta içi sabah 09:55'te çalışır (UTC saatine göre ayarlanır)
+    - cron: '25 6 * * 1-5'
+  workflow_dispatch:
 
 jobs:
-  build:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Kodları Çek
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Python Kurulumu
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          pip install requests yfinance pandas numpy
+      - name: Bağımlılıkları Yükle
+        run: pip install requests
 
-      - name: Run Bot
+      - name: Botu Çalıştır
         env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python bot.py
