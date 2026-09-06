@@ -1,27 +1,30 @@
-name: Nihai Savaş Odası Otomasyonu
+name: Canli Galaktik Istihbarat Ussu
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 8 * * 1-5' # Hafta içi her gün sabah 08:00'de çalışır
+    # Günde 4 kritik seans/saat tetiklemesi (UTC saatine göre ayarlanmıştır: 07:00, 10:00, 13:00, 16:00)
+    - cron: '0 7,10,13,16 * * 1-5'
+  workflow_dispatch: # İstediğin an manuel tetikleyebilmen için
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: Post Kodları Çek
-        uses: actions/checkout@v4
+      - name: Kodlari Depodan Cek
+        uses: actions/checkout@v3
 
-      - name: Python Kurulumu
-        uses: actions/setup-python@v5
+      - name: Python Ortamini Kur
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Bağımlılıkları Yükle
-        run: pip install requests
+      - name: Gerekli Kutuphaneleri Yukle
+        run: |
+          pip install requests
 
-      - name: Botu Çalıştır
+      - name: Galaktik Raporu Calistir
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python bot.py
+        run: |
+          python bot.py
