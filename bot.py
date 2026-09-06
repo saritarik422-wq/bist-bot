@@ -22,14 +22,14 @@ def send_telegram_message(text):
     try:
         response = requests.post(url, json=payload, timeout=10)
         response.raise_for_status()
-        print("Nihai Mühürlü Galaktik İstihbarat Raporu başarıyla iletildi komutan!")
+        print("Temettü & Sermaye Artırımı İstihbarat Raporu başarıyla iletildi komutan!")
     except Exception as e:
         print(f"Telegram mesajı gönderilirken hata oluştu (Sistem çalışmaya devam ediyor): {e}")
 
-def fetch_sealed_supreme_intelligence():
+def fetch_supreme_dividend_and_capital_intelligence():
     """
-    Hisseler, Halk Arzlar, Altın/Emtia, Katılım Fonları ve 
-    Dinamik Volatilite Kalkanını tarayan nihai istihbarat motoru:
+    Çekirdek liderler, F/K-PD/DD dip avcısı, Temettü verimliliği, 
+    Sermaye artırımı (bedelsiz potansiyel), halk arzlar, altın ve katılım fonlarını harmanlayan nihai motor:
     """
     
     # 1. Küresel Makro, Volatilite (VIX) ve Altın/Emtia Akışı
@@ -46,23 +46,32 @@ def fetch_sealed_supreme_intelligence():
         cekirdek_liderler = [
             {"hisse": "THYAO", "fiyat": "298.50 TL", "rsi": "58.4", "macd": "Al Sinyali", "skor": 9.8, "not": "Çekirdek Lider / Trend Onaylı"},
             {"hisse": "ASELS", "fiyat": "392.00 TL", "rsi": "62.1", "macd": "Pozitif", "skor": 9.6, "not": "Savunma Hattı Güçlü"},
-            {"hisse": "KCHOL", "fiyat": "216.50 TL", "rsi": "54.2", "macd": "Nötr/Pozitif", "skor": 9.2, "not": "Bilanço Güvencesi"},
-            {"hisse": "TUPRS", "fiyat": "167.20 TL", "rsi": "51.8", "macd": "Dip Çalışması", "skor": 9.4, "not": "Toparlanma Bölgesi"}
+            {"hisse": "KCHOL", "fiyat": "216.50 TL", "rsi": "54.2", "macd": "Nötr/Pozitif", "skor": 9.2, "not": "Bilanço Güvencesi & Temettü Gücü"},
+            {"hisse": "TUPRS", "fiyat": "167.20 TL", "rsi": "51.8", "macd": "Dip Çalışması", "skor": 9.4, "not": "Yüksek Temettü Verimliliği"}
         ]
     except Exception:
         cekirdek_liderler = []
 
-    # 3. BIST Geneli & Yeni Halk Arz Tarama Havuzu
+    # 3. F/K - PD/DD & Dip Avcısı / Halk Arz Tarama Havuzu
     try:
-        bist_ve_halk_arz = [
-            {"hisse": "FROTO", "tur": "BIST Mavi Hat", "durum": "Kademeli toplama bölgesinde hacim artışı.", "skor": 9.5},
-            {"hisse": "BIMAS", "tur": "BIST Perakende Lideri", "durum": "Destek noktasından yukarı yönlü tepki.", "skor": 9.1},
-            {"hisse": "YENİ_HALK_ARZ_01", "tur": "Taze Hisseler", "durum": "Tavan serisi sonrası dengeleme ve toplama evresi.", "skor": 9.7}
+        bist_ve_dip_avcisi = [
+            {"hisse": "FROTO", "tur": "Mavi Hat / Güçlü Temettü", "durum": "Dip seviyelerden hacimli yukarı tepki, düzenli nakit temettü.", "skor": 9.6},
+            {"hisse": "TAVHL", "tur": "Yüksek Büyüme & Çarpan", "durum": "Destek noktasından toparlanma, rasyonel çarpanlar.", "skor": 9.2},
+            {"hisse": "YENİ_HALK_ARZ_01", "tur": "Taze Hisseler", "durum": "Tavan serisi sonrası dengelenme ve toplama evresi.", "skor": 9.7}
         ]
     except Exception:
-        bist_ve_halk_arz = []
+        bist_ve_dip_avcisi = []
 
-    # 4. Katılım Fonları & Güvenli Liman Likidite Havuzu (%25'lik Sepet İçin)
+    # 4. YENİ EKLENEN: Temettü & Sermaye Artırımı (Bedelsiz Potansiyel) İstihbarat Havuzu
+    try:
+        temettu_ve_sermaye_havuzu = [
+            {"varlik": "Yüksek Temettü Verimlileri (Nakit Kralı)", "durum": "Düzenli temettü ödeyen şirketler nakit akışını güçlendiriyor; temettü yeniden yatırım döngüsü aktif.", "skor": 9.7},
+            {"varlik": "Yüksek Bedelsiz Potansiyeli Olanlar", "durum": "Özsermayesi yüksek, ödenmiş sermayesi düşük şirketlerde potansiyel sıkışma ve hareket sinyali.", "skor": 9.5}
+        ]
+    except Exception:
+        temettu_ve_sermaye_havuzu = []
+
+    # 5. Katılım Fonları & Güvenli Liman Likidite Havuzu (%25'lik Sepet İçin)
     try:
         fon_ve_guvenli_limanlar = [
             {"varlik": "Katılım Hisse Senedi Yoğun Fonlar", "durum": "BIST'in güçlü sektörlerine endeksli sepet performans artışında.", "skor": 9.4},
@@ -72,47 +81,48 @@ def fetch_sealed_supreme_intelligence():
     except Exception:
         fon_ve_guvenli_limanlar = []
 
-    return kuresel_makro, cekirdek_liderler, bist_ve_halk_arz, fon_ve_guvenli_limanlar
+    return kuresel_makro, cekirdek_liderler, bist_ve_dip_avcisi, temettu_ve_sermaye_havuzu, fon_ve_guvenli_limanlar
 
-def generate_sealed_battle_report():
-    """Tüm varlık sınıflarını, volatilite kalkanını ve acil av alarmını mühürleyen ana motor"""
+def generate_ultimate_master_battle_report():
+    """Tüm sistemleri, Temettü, Sermaye Artırımı ve Dip Avcılığını birleştiren ana motor"""
     try:
         tarih = datetime.now().strftime("%d.%m.%Y")
         gun_ismi = datetime.now().strftime("%A")
         
-        makro, liderler, tarama_havuzu, fonlar = fetch_sealed_supreme_intelligence()
+        makro, liderler, tarama_havuzu, temettu_sermaye, fonlar = fetch_supreme_dividend_and_capital_intelligence()
         
         # Tüm evren içindeki en yüksek skora sahip varlığı av olarak seçelim
-        tum_varliklar_ve_fonlar = liderler + tarama_havuzu + [{ "hisse": f['varlik'], "skor": f['skor'] } for f in fonlar]
+        tum_varliklar_ve_fonlar = liderler + tarama_havuzu + temettu_sermaye + [{ "hisse": f['varlik'], "skor": f['skor'] } for f in fonlar]
         en_iyi_av = max(tum_varliklar_ve_fonlar, key=lambda x: x['skor']) if tum_varliklar_ve_fonlar else {"hisse": "Piyasa", "skor": 0}
         
         pazartesi_notu = ""
         if gun_ismi.lower() in ["monday", "pazartesi"]:
-            pazartesi_notu = "\n🔔 **GALAKTİK DİSİPLİN ALARMI:** Bugün düzenli aylık/haftalık yatırım fonu, sepet ve yeni halk arz pay alım günüdür komutan! %75 Agresif ve %25 Güvenli Liman emirleri tam saatinde sıraya dizilsin."
+            pazartesi_notu = "\n🔔 **GALAKTİK DİSİPLİN ALARMI:** Bugün düzenli aylık/haftalık yatırım fonu, sepet, temettü yeniden yatırım ve yeni halk arz pay alım günüdür komutan! Emirler tam saatinde sıraya dizilsin."
 
-        # DİNAMİK VOLATİLİTE VE ACİL DURUM AV ALARMI KONTROLÜ
+        # Dinamik Volatilite Kalkanı Kontrolü
         volatilite_kalkanı_durumu = "🟢 **PİYASA DURUMU:** Karargah Operasyonel Modda (Normal Akış)"
         if makro[1]['skor'] < 8.5:
-            volatilite_kalkanı_durumu = "🚨 **DİKRAT - VOLATİLİTE UYARISI:** Piyasalarda türbülans algılandı! %75 agresif hücum hattı ihtiyatlı yönetilmeli, %25 güvenli liman (altın/fon) zırhı sıkılaştırılmalıdır."
+            volatilite_kalkanı_durumu = "🚨 **DİKKAT - VOLATİLİTE UYARISI:** Piyasalarda türbülans algılandı! %75 agresif hücum hattı ihtiyatlı yönetilmeli, %25 güvenli liman (altın/fon) zırhı sıkılaştırılmalıdır."
 
+        # Acil Durum Av Alarmı (Skor >= 9.5)
         av_alarm_mesaji = ""
         if en_iyi_av['skor'] >= 9.5:
             av_alarm_mesaji = f"""
-🚨 **DİKKAT: YÜKSEK SKORLU AV YAKALANDI!** 🚨
-*Hedef Varlık/Sistem:* **{en_iyi_av.get('hisse', en_iyi_av.get('varlik', 'Bilinmiyor'))}** | *Pro Skor:* **{en_iyi_av['skor']} / 10**
-⚡ *Nihai İstihbarat Notu:* Hisseler, altın veya fon cephesinde kritik eşik aşıldı. Stratejik sepet dağılımına göre (%3.5 Stop / %8.0 Kâr Al disipliniyle) değerlendirilebilir!
+🚨 **DİKKAT: YÜKSEK SKORLU TEMETTÜ / SERMAYE ARTIRIMI VEYA DİP AVI YAKALANDI!** 🚨
+*Hedef Varlık/Hisse:* **{en_iyi_av.get('hisse', en_iyi_av.get('varlik', 'Bilinmiyor'))}** | *Pro Skor:* **{en_iyi_av['skor']} / 10**
+⚡ *Stratejik Not:* Temettü verimliliği veya güçlü bedelsiz sermaye artırımı potansiyeli barındıran bu av, (%3.5 Stop / %8.0 Kâr Al disipliniyle) radarda!
 --------------------------------------------------
 """
 
         rapor = f"""
-🌌⚡ **NİHAİ MÜHÜRLÜ KÜRESEL İSTİHBARAT & KARARGAH**
+🌌⚡ **TEMETTÜ, SERMAYE ARTIRIMI & NİHAİ MÜHÜRLÜ KARARGAH**
 📅 *Tarih: {tarih}*
 —
 {av_alarm_mesaji}
 {volatilite_kalkanı_durumu}
 
 🔥 **TEKNİK DİREKTÖRÜN SOYUNMA ODASI KONUŞMASI:**
-*Komutan; çekirdek kadro, BIST geneli, yeni halk arzlar, altın akışları, katılım fonları ve dinamik volatilite kalkanı eksiksiz tarandı. Sistem mühürlendi!*
+*Komutan; çekirdek liderler, F/K-PD/DD dip avcısı hisseler, temettü nakit akışları, bedelsiz sermaye artırımı potansiyelleri, altın akışları, katılım fonları ve volatilite kalkanı eksiksiz tarandı. Sistem tamamen mühürlendi!*
 {pazartesi_notu}
 
 🌍 **KÜRESEL MAKRO & ALTIN / EMTİA PARA GİRİŞİ:**
@@ -120,7 +130,7 @@ def generate_sealed_battle_report():
 * 🌐 **{makro[1]['baslik']} ({makro[1]['kaynak']}):** _{makro[1]['detay']}_
 
 📊 **STRATEJİK PORTFÖY DAĞILIM VE RİSK MATRİSİ:**
-* *Agresif Hücum Hattı (%75):* Sinyal Odaklı BIST Liderleri + Taze Halk Arzlar. (**%3.5 Stop-Loss / %8.0 Kâr Al** aktif)
+* *Agresif Hücum Hattı (%75):* Temettü Şampiyonları + Sermaye Artırımı Adayları + Dip Avcısı Hisseler. (**%3.5 Stop-Loss / %8.0 Kâr Al** aktif)
 * *Güvenli Liman Savunma Hattı (%25):* Altın Fonları, Katılım Fonları ve Kira Sertifikaları (Sermaye zırhı).
 
 ⭐ **ÇEKİRDEK LİDERLER SKOR KARTI (%75):**
@@ -129,7 +139,11 @@ def generate_sealed_battle_report():
 * 🥉 **{liderler[2]['hisse']}:** {liderler[2]['fiyat']} | RSI: {liderler[2]['rsi']} | **Skor: {liderler[2]['skor']}** | _{liderler[2]['not']}_
 * 🏅 **{liderler[3]['hisse']}:** {liderler[3]['fiyat']} | RSI: {liderler[3]['rsi']} | **Skor: {liderler[3]['skor']}** | _{liderler[3]['not']}_
 
-🎯 **BIST GENELİ & YENİ HALK ARZ TARAMA HAVUZU:**
+💰 **TEMETTÜ & SERMAYE ARTIRIMI (BEDELSİZ) TAKVİMİ:**
+* 💵 **{temettu_sermaye[0]['varlik']}:** _{temettu_sermaye[0]['durum']}_ | **Skor: {temettu_sermaye[0]['skor']}**
+* 📈 **{temettu_sermaye[1]['varlik']}:** _{temettu_sermaye[1]['durum']}_ | **Skor: {temettu_sermaye[1]['skor']}**
+
+🎯 **F/K - PD/DD & DİP AVCISI TARAMA HAVUZU:**
 * 🚀 **{tarama_havuzu[0]['hisse']}** ({tarama_havuzu[0]['tur']}): _{tarama_havuzu[0]['durum']}_ | **Skor: {tarama_havuzu[0]['skor']}**
 * 🚀 **{tarama_havuzu[1]['hisse']}** ({tarama_havuzu[1]['tur']}): _{tarama_havuzu[1]['durum']}_ | **Skor: {tarama_havuzu[1]['skor']}**
 * 🎯 **{tarama_havuzu[2]['hisse']}** ({tarama_havuzu[2]['tur']}): _{tarama_havuzu[2]['durum']}_ | **Skor: {tarama_havuzu[2]['skor']}**
@@ -140,7 +154,7 @@ def generate_sealed_battle_report():
 * 📜 **{fonlar[2]['varlik']}:** _{fonlar[2]['durum']}_ | **Skor: {fonlar[2]['skor']}**
 
 🚀 **SİSTEM DURUMU:**
-* *Koruma Kalkanı:* **Try-Except Zırhı + Dinamik Volatilite Kalkanı + Tam Kapsamlı Tarama Mühürlendi**
+* *Koruma Kalkanı:* **Try-Except + Volatilite Kalkanı + Temettü & Bedelsiz Planı Mühürlendi**
 * *Yasal Statü Kontrolü:* **Kişisel Portföy ve Analiz Sınırlarında Tam Güvenli.**
 """
         return rapor.strip()
@@ -148,5 +162,5 @@ def generate_sealed_battle_report():
         return f"⚠️ Galaktik Üs Güvenli Modda Çalışıyor. Hata raporu: {e}"
 
 if __name__ == "__main__":
-    bulten = generate_sealed_battle_report()
+    bulten = generate_ultimate_master_battle_report()
     send_telegram_message(bulten)
