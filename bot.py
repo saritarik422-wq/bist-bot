@@ -7,9 +7,6 @@ TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(text):
-    """
-    14 günlük periyot entegre edilmiş telegram bildirim motoru:
-    """
     if not TOKEN or not CHAT_ID:
         print("Uyarı: Telegram Token veya Chat ID bulunamadı!")
         return
@@ -23,7 +20,7 @@ def send_telegram_message(text):
     try:
         response = requests.post(url, json=payload)
         response.raise_for_status()
-        print("14 Günlük Döngü Destekli Rapor Telegram'a başarıyla fırlatıldı!")
+        print("Rapor Telegram'a başarıyla fırlatıldı!")
     except Exception as e:
         print(f"Telegram mesajı gönderilirken hata oluştu: {e}")
         try:
@@ -32,12 +29,6 @@ def send_telegram_message(text):
             pass
 
 def fetch_14_day_swing_intelligence():
-    """
-    14 günlük periyot, RSI ortalamaları, hacim ve trendleri
-    taryan saf BIST motoru:
-    """
-
-    # 1. Çekirdek Lider Hisseler & 14 Günlük Trend
     try:
         cekirdek_liderler = [
             {"hisse": "THYAO", "fiyat": 0},
@@ -48,7 +39,6 @@ def fetch_14_day_swing_intelligence():
     except Exception:
         cekirdek_liderler = []
 
-    # 2. 14 Günlük Dip Avcısı & Hacim Patlaması
     try:
         bist_dip_avcisi = [
             {"hisse": "FROTO", "tur": "14 Günlük Dip"},
@@ -58,7 +48,6 @@ def fetch_14_day_swing_intelligence():
     except Exception:
         bist_dip_avcisi = []
 
-    # 3. Yeni Halk Arzlar & Taze Şirketler
     try:
         yeni_halk_arzlar = [
             {"hisse": "YENİ_HALK_ARZ_01"},
@@ -67,7 +56,6 @@ def fetch_14_day_swing_intelligence():
     except Exception:
         yeni_halk_arzlar = []
 
-    # 4. Temettü Şampiyonları & Bedelsiz Potansiyeli
     try:
         temettu_ve_bedelsiz = [
             {"hisse": "Yüksek Temettü Verimi"},
@@ -79,15 +67,11 @@ def fetch_14_day_swing_intelligence():
     return cekirdek_liderler, bist_dip_avcisi, yeni_halk_arzlar, temettu_ve_bedelsiz
 
 def generate_14_day_battle_report():
-    """14 günlük periyot ve saf BIST verileriyle savaş raporu üreticisi"""
     try:
         tarih = datetime.now().strftime("%d.%m.%Y")
         gun_ismi = datetime.now().strftime("%A")
 
         liderler, dip_avcilari, halk_arzlar, temettu_bedelsiz = fetch_14_day_swing_intelligence()
-
-        tum_hisseler = liderler + dip_avcilari
-        en_iyi_av = {"hisseyi": "Analiz Tamamlandı", "skor": 95}
 
         pazartesi_notu = ""
         if gun_ismi.lower() in ["monday", "pazartesi"]:
@@ -121,9 +105,9 @@ def generate_14_day_battle_report():
 * 🏅 **{liderler[3]['hisse']}**: Güçlü Trend
 
 🎯 **14 GÜNLÜK DİP AVCISI HİSSELER:**
-* 🚀 **{dip_avcisi[0]['hisse']}** ({dip_avcisi[0]['tur']})
-* 🚀 **{dip_avcisi[1]['hisse']}** ({dip_avcisi[1]['tur']})
-* 🎯 **{dip_avcisi[2]['hisse']}** ({dip_avcisi[2]['tur']})
+* 🚀 **{dip_avcilari[0]['hisse']}** ({dip_avcilari[0]['tur']})
+* 🚀 **{dip_avcilari[1]['hisse']}** ({dip_avcilari[1]['tur']})
+* 🎯 **{dip_avcilari[2]['hisse']}** ({dip_avcilari[2]['tur']})
 
 ✨ **YENİ HALK ARZLAR (14 GÜNLÜK DENGELEME):**
 * 🌟 **{halk_arzlar[0]['hisse']}**
