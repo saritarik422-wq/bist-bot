@@ -9,7 +9,8 @@ CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(text):
     """
-    Telegram mesajlarını hisse blokları bölünmeyecek şekilde güvenle iletir.
+    Hisse bloklarını çift alt satır (\n\n) üzerinden algılar.
+    Hiçbir hisse kartını yarıda bölmeden Telegram'a iletir.
     """
     if not TOKEN or not CHAT_ID:
         print("Uyarı: Telegram Token veya Chat ID bulunamadı!")
@@ -17,32 +18,27 @@ def send_telegram_message(text):
         
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     
-    # Mesaj 3800 karakterden uzunsa satır bazlı böl
-    if len(text) > 3800:
-        lines = text.split("\n")
-        chunks = []
-        current_chunk = ""
-        
-        for line in lines:
-            if len(current_chunk) + len(line) + 1 > 3800:
-                chunks.append(current_chunk.strip())
-                current_chunk = line + "\n"
-            else:
-                current_chunk += line + "\n"
-        if current_chunk:
-            chunks.append(current_chunk.strip())
-            
-        for chunk in chunks:
-            payload = {"chat_id": CHAT_ID, "text": chunk, "parse_mode": "Markdown"}
+    # Metni çift alt satıra göre (hisse bloklarına) ayır
+    blocks = text.split("\n\n")
+    current_chunk = ""
+    
+    for block in blocks:
+        # Blok eklendiğinde 3500 karakteri aşıyorsa mevcut chunk'ı gönder
+        if len(current_chunk) + len(block) + 2 > 3500:
+            payload = {"chat_id": CHAT_ID, "text": current_chunk.strip(), "parse_mode": "Markdown"}
             try:
                 requests.post(url, json=payload, timeout=15)
             except Exception as e:
                 print(f"Telegram gönderme hatası: {e}")
-    else:
-        payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
+            current_chunk = block + "\n\n"
+        else:
+            current_chunk += block + "\n\n"
+            
+    # Kalan son chunk'ı gönder
+    if current_chunk.strip():
+        payload = {"chat_id": CHAT_ID, "text": current_chunk.strip(), "parse_mode": "Markdown"}
         try:
-            response = requests.post(url, json=payload, timeout=15)
-            response.raise_for_status()
+            requests.post(url, json=payload, timeout=15)
         except Exception as e:
             print(f"Telegram gönderme hatası: {e}")
 
@@ -128,7 +124,7 @@ def generate_pure_bist_battle_report():
             else:
                 rapor += f"• *{kod}*: Veri Servisi Bağlantısı Bekleniyor...\n"
 
-        rapor += "\n🔥 *BİST 100 RADARINDAN YAKALANAN ALIM FIRSATLARI:*\n"
+        rapor += "\n🔥 *BİST 100 RADARINDAN YAKALANAN ALIM FIRSATLARI:*\n\n"
         firsat_bulundu_mu = False
         
         for kod in bist100_tarama_havuzu:
@@ -153,9 +149,9 @@ def generate_pure_bist_battle_report():
                     firsat_bulundu_mu = True
 
         if not firsat_bulundu_mu:
-            rapor += "ℹ️ BİST 100 genelinde şu an %3.5+ kırılım yapan veya Güçlü Al sinyali veren yeni hisse bulunamadı.\n"
+            rapor += "ℹ️ BİST 100 genelinde şu an %3.5+ kırılım yapan veya Güçlü Al sinyali veren yeni hisse bulunamadı.\n\n"
 
-        rapor += "\n🚀 *SİSTEM DURUMU:*\n"
+        rapor += "🚀 *SİSTEM DURUMU:*\n"
         rapor += "• BİST 30, 50 ve 100 Hisseleri Taranmıştır\n"
         rapor += "• Sadece Alım Şartı Sağlayan Hisseler Rapora Basılmıştır"
         
