@@ -18,12 +18,10 @@ def send_telegram_message(text):
         
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     
-    # Metni çift alt satıra göre (hisse bloklarına) ayır
     blocks = text.split("\n\n")
     current_chunk = ""
     
     for block in blocks:
-        # Blok eklendiğinde 3500 karakteri aşıyorsa mevcut chunk'ı gönder
         if len(current_chunk) + len(block) + 2 > 3500:
             payload = {"chat_id": CHAT_ID, "text": current_chunk.strip(), "parse_mode": "Markdown"}
             try:
@@ -34,7 +32,6 @@ def send_telegram_message(text):
         else:
             current_chunk += block + "\n\n"
             
-    # Kalan son chunk'ı gönder
     if current_chunk.strip():
         payload = {"chat_id": CHAT_ID, "text": current_chunk.strip(), "parse_mode": "Markdown"}
         try:
@@ -134,8 +131,8 @@ def generate_pure_bist_battle_report():
             fiyat, rsi, macd, degisim = get_live_macd_and_rsi(kod)
             
             if fiyat is not None:
-                # KESİN FİLTRE: Sadece MACD Al/Güçlü Al veren VE %3.5 üzeri yükselen hisseler basılır
-                if ("AL" in str(macd)) and (degisim >= 3.5):
+                # GÜNCELLENEN FİLTRE: AL/GÜÇLÜ AL + %3.5+ Prim + RSI < 72 (Aşırı şişmişleri eler)
+                if ("AL" in str(macd)) and (degisim >= 3.5) and (rsi < 72):
                     stop_fiyati = fiyat * 0.965
                     hedef_fiyat = fiyat * 1.080
                     yon = "🔺" if degisim >= 0 else "🔻"
@@ -150,11 +147,11 @@ def generate_pure_bist_battle_report():
                     firsat_bulundu_mu = True
 
         if not firsat_bulundu_mu:
-            rapor += "ℹ️ BİST 100 genelinde şu an teknik olarak Alım Şartını sağlayan (%3.5+ prim ve AL/GÜÇLÜ AL sinyali) hisse bulunamadı.\n\n"
+            rapor += "ℹ️ BİST 100 genelinde şu an teknik olarak tüm şartları sağlayan (%3.5+ prim, AL sinyali ve RSI < 72) hisse bulunamadı.\n\n"
 
         rapor += "🚀 *SİSTEM DURUMU:*\n"
         rapor += "• BİST 30, 50 ve 100 Hisseleri Taranmıştır\n"
-        rapor += "• Sadece Alım Şartı Sağlayan Hisseler Rapora Basılmıştır"
+        rapor += "• Sağlıklı Trend Şartı (RSI < 72) Uygulanmıştır"
         
         return rapor.strip()
     except Exception as e:
