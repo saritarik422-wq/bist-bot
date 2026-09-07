@@ -2,9 +2,9 @@ name: Canli Galaktik Istihbarat Ussu
 
 on:
   schedule:
-    # Günde 4 kritik seans/saat tetiklemesi (UTC saatine göre ayarlanmıştır: 07:00, 10:00, 13:00, 16:00)
+    # Günde 4 kritik seans/saat tetikleme
     - cron: '0 7,10,13,16 * * 1-5'
-  workflow_dispatch: # İstediğin an manuel tetikleyebilmen için
+  workflow_dispatch: # İstediğin an manuel tetikleme
 
 jobs:
   run-bot:
