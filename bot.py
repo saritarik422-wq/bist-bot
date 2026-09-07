@@ -8,19 +8,36 @@ TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(text):
-    """Telegram mesaj limiti sınırını aşmayacak şekilde mesaj iletir."""
+    """
+    Telegram mesajlarını hisse blokları bölünmeyecek şekilde güvenle iletir.
+    """
     if not TOKEN or not CHAT_ID:
         print("Uyarı: Telegram Token veya Chat ID bulunamadı!")
         return
         
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     
-    # 4000 karakterden uzun raporları bölerek gönderir
-    if len(text) > 4000:
-        chunks = [text[i:i+4000] for i in range(0, len(text), 4000)]
+    # Mesaj 3800 karakterden uzunsa satır bazlı böl
+    if len(text) > 3800:
+        lines = text.split("\n")
+        chunks = []
+        current_chunk = ""
+        
+        for line in lines:
+            if len(current_chunk) + len(line) + 1 > 3800:
+                chunks.append(current_chunk.strip())
+                current_chunk = line + "\n"
+            else:
+                current_chunk += line + "\n"
+        if current_chunk:
+            chunks.append(current_chunk.strip())
+            
         for chunk in chunks:
             payload = {"chat_id": CHAT_ID, "text": chunk, "parse_mode": "Markdown"}
-            requests.post(url, json=payload, timeout=15)
+            try:
+                requests.post(url, json=payload, timeout=15)
+            except Exception as e:
+                print(f"Telegram gönderme hatası: {e}")
     else:
         payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
         try:
@@ -30,7 +47,7 @@ def send_telegram_message(text):
             print(f"Telegram gönderme hatası: {e}")
 
 def get_live_macd_and_rsi(ticker_symbol):
-    """Yahoo Finance üzerinden güvenli veri çeker."""
+    """Yahoo Finance üzerinden canlı fiyat, RSI ve MACD çeker."""
     try:
         symbol = ticker_symbol if ticker_symbol.endswith(".IS") else f"{ticker_symbol}.IS"
         ticker = yf.Ticker(symbol)
