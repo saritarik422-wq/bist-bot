@@ -1,29 +1,28 @@
 name: Canli Galaktik Istihbarat Ussu
 
 on:
-  schedule:
-    - cron: '0 7,10,13,16 * * 1-5'
   workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * 1-5' # Hafta içi her gün UTC 08:00 (TSİ 11:00)
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: Kodlari Depodan Cek
+      - name: Repositoriyi Klonla
         uses: actions/checkout@v3
 
-      - name: Python Ortamini Kur
+      - name: Python Ortamını Kur
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Gerekli Kutuphaneleri Yukle
+      - name: Gerekli Kütüphaneleri Yükle
         run: |
-          pip install requests
+          pip install yfinance pandas requests
 
-      - name: Galaktik Raporu Calistir
+      - name: Botu Çalıştır
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          python bot.py
+        run: python bot.py
