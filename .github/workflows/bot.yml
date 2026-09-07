@@ -1,9 +1,16 @@
 name: Canli Galaktik Istihbarat Ussu
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Manuel tetikleme butonu
   schedule:
-    - cron: '0 8 * * 1-5' # Hafta içi her gün UTC 08:00 (TSİ 11:00)
+    # TSİ 09:45 (Açılış) - UTC 06:45
+    - cron: '45 6 * * 1-5'
+    # TSİ 12:30 (Öğle) - UTC 09:30
+    - cron: '30 9 * * 1-5'
+    # TSİ 15:30 (Gün Ortası) - UTC 12:30
+    - cron: '30 12 * * 1-5'
+    # TSİ 18:15 (Kapanış) - UTC 15:15
+    - cron: '15 15 * * 1-5'
 
 jobs:
   run-bot:
