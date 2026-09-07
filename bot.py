@@ -134,7 +134,8 @@ def generate_pure_bist_battle_report():
             fiyat, rsi, macd, degisim = get_live_macd_and_rsi(kod)
             
             if fiyat is not None:
-                if "GÜÇLÜ AL" in str(macd) or degisim >= 3.5:
+                # KESİN FİLTRE: Sadece MACD Al/Güçlü Al veren VE %3.5 üzeri yükselen hisseler basılır
+                if ("AL" in str(macd)) and (degisim >= 3.5):
                     stop_fiyati = fiyat * 0.965
                     hedef_fiyat = fiyat * 1.080
                     yon = "🔺" if degisim >= 0 else "🔻"
@@ -149,7 +150,7 @@ def generate_pure_bist_battle_report():
                     firsat_bulundu_mu = True
 
         if not firsat_bulundu_mu:
-            rapor += "ℹ️ BİST 100 genelinde şu an %3.5+ kırılım yapan veya Güçlü Al sinyali veren yeni hisse bulunamadı.\n\n"
+            rapor += "ℹ️ BİST 100 genelinde şu an teknik olarak Alım Şartını sağlayan (%3.5+ prim ve AL/GÜÇLÜ AL sinyali) hisse bulunamadı.\n\n"
 
         rapor += "🚀 *SİSTEM DURUMU:*\n"
         rapor += "• BİST 30, 50 ve 100 Hisseleri Taranmıştır\n"
