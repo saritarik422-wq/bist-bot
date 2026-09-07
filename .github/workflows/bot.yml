@@ -1,7 +1,7 @@
 name: Canli Galaktik Istihbarat Ussu
 
 on:
-  workflow_dispatch: # Manuel tetikleme butonu
+  workflow_dispatch: # İstediğiniz an manuel çalıştırma butonu
   schedule:
     # TSİ 09:45 (Açılış) - UTC 06:45
     - cron: '45 6 * * 1-5'
