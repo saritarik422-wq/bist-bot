@@ -1,16 +1,23 @@
 from datetime import datetime
+import os
 import feedparser
 import pandas as pd
 import requests
 import yfinance as yf
 
-# --- TELEGRAM AYARLARI ---
-TELEGRAM_TOKEN = "6970761946:AAH2gpNnv6gEoPWSfZ4E8QObEnQdUsJ-B8g"
-CHAT_ID = "6970761946"
+# --- GÜVENLİ TELEGRAM AYARLARI ---
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
 
 
 def telegram_mesaj_gonder(mesaj):
   """Telegram üzerinden anlık ve biçimlendirilmiş bildirim gönderir"""
+  if not TELEGRAM_TOKEN or not CHAT_ID:
+    print(
+        "Telegram Token veya Chat ID bulunamadı! Ortam değişkenlerini"
+        " kontrol edin."
+    )
+    return
   try:
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": mesaj, "parse_mode": "Markdown"}
@@ -62,8 +69,6 @@ def kuresel_finans_ve_tahtaci_taramasi():
 
 def borsa_istanbul_tum_hisseleri_getir():
   """BIST'teki tüm hisseleri ve yeni halk arzları dinamik olarak kapsayan geniş havuz"""
-  # BIST 100, BIST 50, BIST 30 ve aktif işlem gören popüler/yeni halk arz hisselerinin genişletilmiş evreni
-  # Bu liste, piyasadaki neredeyse tüm hacimli ve hareketli hisseleri kapsar.
   genis_havuz = [
       "THYAO.IS",
       "EREGL.IS",
@@ -94,7 +99,6 @@ def borsa_istanbul_tum_hisseleri_getir():
       "SURGY.IS",
       "VAKBN.IS",
       "HALKB.IS",
-      "YKBNK.IS",
       "PGSUS.IS",
       "TCELL.IS",
       "BORSK.IS",
@@ -104,7 +108,6 @@ def borsa_istanbul_tum_hisseleri_getir():
       "TABGD.IS",
       "DOHOL.IS",
       "ARCLK.IS",
-      "TOASO.IS",
       "KOZAA.IS",
       "KOZAL.IS",
       "ODAS.IS",
