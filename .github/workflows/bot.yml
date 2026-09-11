@@ -3,7 +3,7 @@ name: BIST Fırsat Avcısı
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 7-15 * * 1-5'
+    - cron: '*/5 7-15 * * 1-5'
 
 jobs:
   run-bot:
