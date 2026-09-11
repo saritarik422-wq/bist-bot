@@ -199,5 +199,5 @@ def sinirsiz_firsat_avcisi():
     print(f"--- Geniş Tarama Tamamlandı. Toplam {bulunan_firsat_sayisi} fırsat yakalandı. ---")
 
 if __name__ == "__main__":
-    telegram_mesaj_gonder("🚀 Bot test mesaji: Seans acildi, sistem calisiyor!")
     sinirsiz_firsat_avcisi()
+
