@@ -200,4 +200,3 @@ def sinirsiz_firsat_avcisi():
 
 if __name__ == "__main__":
     sinirsiz_firsat_avcisi()
-
