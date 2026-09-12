@@ -1,4 +1,14 @@
 import os
+import subprocess
+import sys
+
+# Sigorta Mekanizması: Ortamda eksik paket varsa anında otomatik kurar
+for package in ["requests", "yfinance", "pandas", "numpy", "pandas-ta"]:
+    try:
+        __import__(package.replace("-ta", "_ta"))
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
 import requests
 import yfinance as yf
 import pandas as pd
