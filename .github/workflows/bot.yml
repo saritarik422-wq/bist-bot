@@ -2,8 +2,8 @@ name: Dual-Engine Trade System
 
 on:
   schedule:
-    # Borsa açıkken her 5 dakikada bir aynı anda tetiklenir (Hafta içi 09:30 - 18:15 arası)
-    - cron: '*/5 6-15 * * 1-5' 
+    # Borsa açıkken her 5 dakikada bir çalışır
+    - cron: '*/5 6-15 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -21,16 +21,16 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy requests
+          pip install pandas numpy requests yfinance feedparser
 
       - name: Run Daily Bot (bot.py)
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python bot.py
 
-      - name: Run Mid-Term Radar Bot (firsat.py) - Aynı Dakikada
+      - name: Run Mid-Term Radar Bot (firsat.py)
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
         run: python firsat.py
