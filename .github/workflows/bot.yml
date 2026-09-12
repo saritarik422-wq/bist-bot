@@ -1,29 +1,36 @@
-name: BIST Fırsat Avcısı
+name: Dual-Engine Trade System
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '*/5 7-15 * * 1-5'
+    # Borsa açıkken her 5 dakikada bir aynı anda tetiklenir (Hafta içi 09:30 - 18:15 arası)
+    - cron: '*/5 6-15 * * 1-5' 
+  workflow_dispatch:
 
 jobs:
-  run-bot:
+  run-bots:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Python Ortamını Kur
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Gerekli Kütüphaneleri Yükle
+      - name: Install Dependencies
         run: |
-          pip install yfinance pandas requests feedparser
+          python -m pip install --upgrade pip
+          pip install pandas numpy requests
 
-      - name: Botu Çalıştır
+      - name: Run Daily Bot (bot.py)
         env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
-        run: |
-          python firsat.py
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot.py
+
+      - name: Run Mid-Term Radar Bot (firsat.py) - Aynı Dakikada
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python firsat.py
