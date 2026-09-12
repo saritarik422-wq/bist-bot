@@ -166,7 +166,7 @@ def kurumsal_akis_sistemi():
     
         "chat_id": CHAT_ID,
         "text": "🟢 bot.py başarıyla çalıştı ve taramayı tamamladı!"
-    }
+    
     requests.post(url, json=payload)
 
             "🧠 *GÜNLÜK PİYASA DURUM RAPORU (RSI 7)*\n"
