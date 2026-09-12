@@ -163,7 +163,22 @@ def kurumsal_akis_sistemi():
         for f in bulunan_firsatlar[:3]:
             telegram_mesaj_gonder(f)
     else:
-        durum_raporu = (
+        durum_raporu = (    
+            # --- Test / Çalışma Bildirimi ---
+import os
+import requests
+
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
+
+if TELEGRAM_TOKEN and CHAT_ID:
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": "🟢 bot.py başarıyla çalıştı ve taramayı tamamladı!"
+    }
+    requests.post(url, json=payload)
+
             "🧠 *GÜNLÜK PİYASA DURUM RAPORU (RSI 7)*\n"
             f"• Küresel/Yerel Akış: {piyasa_gundemi}\n"
             "• Mühürlü RSI(7) koşulları taranıyor, uygun formasyon bekleniyor.\n"
@@ -173,3 +188,18 @@ def kurumsal_akis_sistemi():
 
 if __name__ == "__main__":
     kurumsal_akis_sistemi()
+# --- Test / Çalışma Bildirimi ---
+import os
+import requests
+
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
+
+if TELEGRAM_TOKEN and CHAT_ID:
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": "🟢 bot.py başarıyla çalıştı ve taramayı tamamladı!"
+    }
+    requests.post(url, json=payload)
+
