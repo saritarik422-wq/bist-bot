@@ -162,7 +162,6 @@ def kurumsal_akis_sistemi():
         durum_raporu = (    
             # --- Test / Çalışma Bildirimi 
 
-if TELEGRAM_TOKEN and CHAT_ID:
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {
         "chat_id": CHAT_ID,
