@@ -126,10 +126,10 @@ def kurumsal_akis_sistemi():
                 float(macd.iloc[-1]) > float(signal.iloc[-1]) and
                 son_rsi < 48 and
                 mfi_guclu
-            )
+            
 
             if kurumsal_kosul:
-                rapor = (
+            
                     f"💎 *BOD - GÜNLÜK KURUMSAL FIRSAT*\n"
                     f"📈 *Hisse:* `{hisse}`\n"
                     f"┣ 💵 *Güncel Fiyat:* {son_fiyat:.2f} TL\n"
