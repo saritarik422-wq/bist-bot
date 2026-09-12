@@ -161,7 +161,7 @@ def kurumsal_akis_sistemi():
     else:
         durum_raporu = (    
             # --- Test / Çalışma Bildirimi ---
-import os
+
 import requests
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
