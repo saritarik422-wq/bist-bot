@@ -160,12 +160,7 @@ def kurumsal_akis_sistemi():
             telegram_mesaj_gonder(f)
     else:
         durum_raporu = (    
-            # --- Test / Çalışma Bildirimi ---
-
-
-
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-CHAT_ID = os.environ.get("CHAT_ID")
+            # --- Test / Çalışma Bildirimi 
 
 if TELEGRAM_TOKEN and CHAT_ID:
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
