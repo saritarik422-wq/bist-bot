@@ -33,16 +33,6 @@ def tum_bist_hisselerini_getir():
     ]
     return list(set(bist_evreni))
 
-def kuresel_ve_kap_haberleri_cek():
-    haber_ozeti = "Piyasa akışı ve haberler taranıyor..."
-    try:
-        feed = feedparser.parse("https://www.kap.org.tr/tr/sirket-bildirimleri")
-        if feed.entries:
-            haber_ozeti = f"Son KAP Bildirimi: {feed.entries[0].title}"
-    except Exception:
-        pass
-    return haber_ozeti
-
 def log_kaydet(hisse, fiyat, hedef1, hedef2, stop):
     dosya_adi = "bot_log.csv"
     dosya_varmi = os.path.isfile(dosya_adi)
@@ -53,12 +43,9 @@ def log_kaydet(hisse, fiyat, hedef1, hedef2, stop):
             writer.writerow(["Tarih", "Hisse", "Fiyat", "Hedef 1", "Hedef 2", "Dinamik Stop"])
         writer.writerow([turkey_time.strftime('%Y-%m-%d %H:%M'), hisse, fiyat, hedef1, hedef2, stop])
 
-# --- 1. MODÜL: GÜNÜN MÜHÜRLÜ BOT ---
+# --- 1. MODÜL: BOD - GÜNÜN KURUMSAL AKIŞI ---
 def kurumsal_akis_sistemi():
     print("Kurumsal Akıllı Para (Smart Money) sistemi çalıştırılıyor...")
-    turkey_time = datetime.now(timezone(timedelta(hours=3)))
-    
-    piyasa_gundemi = kuresel_ve_kap_haberleri_cek()
     bulunan_firsatlar = []
     tum_hisseler = tum_bist_hisselerini_getir()
     
@@ -100,7 +87,6 @@ def kurumsal_akis_sistemi():
             std20 = data['Close'].rolling(window=20).std()
             bandwidth = ((sma20 + (std20 * 2)) - (sma20 - (std20 * 2))) / sma20
             siskisma_var = bool(bandwidth.iloc[-1] < bandwidth.rolling(window=20).mean().iloc[-1])
-            kural_2_hacim_sikisma = bool(hacim_patlamasi or siskisma_var)
             
             tr = pd.concat([data['High'] - data['Low'], 
                             abs(data['High'] - data['Close'].shift()), 
@@ -128,13 +114,13 @@ def kurumsal_akis_sistemi():
             
             if kurumsal_kosul:
                 rapor_parca = (
-                    f"💎 *BOD - GÜNLÜK KURUMSAL AKIŞ*\n"
+                    f"💎 *BOD - GÜNLÜK KURUMSAL FIRSAT*\n"
                     f"📈 *Hisse:* `{hisse}`\n"
                     f"💵 *Güncel Fiyat:* `{son_fiyat:.2f} TL`\n"
                     f"🎯 *Hedef 1:* `{hedef_1} TL` | *Hedef 2:* `{hedef_2} TL`\n"
                     f"🛡️ *ATR İz Süren Stop:* `{dinamik_stop} TL`\n"
-                    f"💰 *Akıllı Para Girişi:* `Onaylandı`\n"
-                    f"📊 *Kurumsal Pozisyon:* `{onerilen_lot} Lot ({onerilen_tutar} TL)`"
+                    f"💰 *Akıllı Para (MFI):* `Para Girişi Onaylandı` ✅\n"
+                    f"📊 *Kurumsal Pozisyon:* `Önerilen Tutar ~{onerilen_tutar} TL ({onerilen_lot} Lot)`"
                 )
                 bulunan_firsatlar.append(rapor_parca)
                 log_kaydet(hisse, son_fiyat, hedef_1, hedef_2, dinamik_stop)
@@ -142,23 +128,76 @@ def kurumsal_akis_sistemi():
         except Exception as e:
             print(f"{hisse} taranırken hata: {e}")
             
-    zaman_str = turkey_time.strftime('%H:%M - %d.%m.%Y')
-    
     if bulunan_firsatlar:
         for f in bulunan_firsatlar[:3]:
             telegram_mesaj_gonder(f)
-    else:
-        durum_raporu = (
-            f"🧠 *Tüm BIST Evreni Günlük Tarama Raporu*\n"
-            f"• Son Küresel/Yerel Akış: {piyasa_gundemi}\n"
-            f"• Günlük mühürlü kurumsal koşullarda fırsat tespit edilemedi.\n"
-            f"⏱️ *Zaman:* {zaman_str}"
-        )
-        telegram_mesaj_gonder(durum_raporu)
 
-# --- 2. MODÜL: ORTA VADE SEPETİ (SMA50 TREND) ---
+# --- 2. MODÜL: MÜHÜRLÜ RSI7 ---
+def muhurlu_rsi7_sistemi():
+    print("Mühürlü RSI7 sistemi çalıştırılıyor...")
+    bulunan_firsatlar = []
+    tum_hisseler = tum_bist_hisselerini_getir()
+    
+    for hisse in tum_hisseler:
+        try:
+            data = yf.download(hisse, period="3mo", interval="1d", progress=False)
+            if data.empty or len(data) < 30:
+                continue
+            if isinstance(data.columns, pd.MultiIndex):
+                data.columns = data.columns.get_level_values(0)
+                
+            son_fiyat = float(data['Close'].iloc[-1])
+            
+            delta = data['Close'].diff()
+            gain = (delta.where(delta > 0, 0)).rolling(window=7).mean()
+            loss = (-delta.where(delta < 0, 0)).rolling(window=7).mean()
+            rs = gain / loss
+            rsi7 = 100 - (100 / (1 + rs))
+            son_rsi7 = float(rsi7.iloc[-1])
+            
+            data['Typical_Price'] = (data['High'] + data['Low'] + data['Close']) / 3
+            data['Money_Flow'] = data['Typical_Price'] * data['Volume']
+            pos_flow = data['Money_Flow'].where(data['Typical_Price'] > data['Typical_Price'].shift(1), 0)
+            neg_flow = data['Money_Flow'].where(data['Typical_Price'] < data['Typical_Price'].shift(1), 0)
+            mfi_guclu = bool(pos_flow.iloc[-1] > neg_flow.iloc[-1])
+            
+            tr = pd.concat([data['High'] - data['Low'], 
+                            abs(data['High'] - data['Close'].shift()), 
+                            abs(data['Low'] - data['Close'].shift())], axis=1).max(axis=1)
+            atr = float(tr.rolling(window=14).mean().iloc[-1])
+            dinamik_stop = round(son_fiyat - (atr * 1.5), 2)
+            hedef_1 = round(son_fiyat * 1.035, 2)
+            hedef_2 = round(son_fiyat * 1.07, 2)
+            
+            risk_mesafesi = son_fiyat - dinamik_stop
+            if risk_mesafesi <= 0:
+                risk_mesafesi = son_fiyat * 0.05
+            toplam_risk_butcesi = 2000.0
+            onerilen_lot = int(toplam_risk_butcesi / risk_mesafesi)
+            onerilen_tutar = int(onerilen_lot * son_fiyat)
+            
+            if 30 <= son_rsi7 <= 48 and mfi_guclu:
+                rapor_parca = (
+                    f"🚨 *MÜHÜRLÜ RSI7 - FIRSAT RAPORU*\n"
+                    f"📈 *Hisse Kod:* `{hisse}`\n"
+                    f"┣ 💵 *Güncel Fiyat:* `{son_fiyat:.2f} TL`\n"
+                    f"┣ 📊 *RSI(7) Değeri:* `{son_rsi7:.1f}`\n"
+                    f"┣ 🎯 *Hedef 1:* `{hedef_1} TL` | *Hedef 2:* `{hedef_2} TL`\n"
+                    f"┣ 🛡️ *İz Süren Stop:* `{dinamik_stop} TL`\n"
+                    f"┣ 💰 *Akıllı Para (MFI):* `Sinyal Alındı` ✅\n"
+                    f"┗ 📐 *Önerilen Pozisyon Tutar:* `~{onerilen_tutar} TL ({onerilen_lot} Lot)`"
+                )
+                bulunan_firsatlar.append(rapor_parca)
+        except Exception as e:
+            print(f"{hisse} RSI7 taranırken hata: {e}")
+            
+    if bulunan_firsatlar:
+        for f in bulunan_firsatlar[:2]:
+            telegram_mesaj_gonder(f)
+
+# --- 3. MODÜL: FIRSAT PY - ORTA VADELİ SEPET ---
 def orta_vade_sepet_sistemi():
-    print("Mühürlü Orta Vadeli Sepet Modülü çalıştırılıyor...")
+    print("Fırsat PY - Orta Vadeli Sepet Modülü çalıştırılıyor...")
     turkey_time = datetime.now(timezone(timedelta(hours=3)))
     orta_vade_adaylar = []
     tum_hisseler = tum_bist_hisselerini_getir()
@@ -216,7 +255,6 @@ def orta_vade_sepet_sistemi():
             
             if orta_vade_mushur:
                 orta_vade_adaylar.append(f"• `{hisse}` (Fiyat: {son_fiyat:.2f} TL)")
-                log_kaydet(hisse, son_fiyat, son_fiyat*1.05, son_fiyat*1.10, son_fiyat*0.95)
                 
         except Exception as e:
             print(f"{hisse} orta vade taranırken hata: {e}")
@@ -232,10 +270,9 @@ def orta_vade_sepet_sistemi():
             f"⏱️ *Zaman:* {zaman_str}"
         )
         telegram_mesaj_gonder(rapor)
-    else:
-        print("Orta vade sepet kriterlerine uyan hisse bulunamadı.")
 
 if __name__ == "__main__":
-    telegram_mesaj_gonder("🚀 Tarık Bey, sistem mühürlendi ve Telegram bağlantısı başarıyla sağlandı!")
+    telegram_mesaj_gonder("🔔 *Sistem Test Başlatıldı*\n📦 Test Test - Bağlantı ve Telegram entegrasyonu aktif.")
     kurumsal_akis_sistemi()
+    muhurlu_rsi7_sistemi()
     orta_vade_sepet_sistemi()
