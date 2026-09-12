@@ -162,7 +162,7 @@ def kurumsal_akis_sistemi():
         durum_raporu = (    
             # --- Test / Çalışma Bildirimi ---
 
-import requests
+
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
