@@ -246,7 +246,7 @@ def orta_vade_sepet_sistemi():
             f"📌 *Durum:* Orta vadeli trendde nakiti değerlendirecek güçlü adaylar listelendi.\n"
             f"📦 *Aday Hisseler:*\n{sepet_metni}\n"
             f"⏱️ *Zaman:* {zaman_str}"
- if __name__ == "__main__":
+if __name__ == "__main__":
     telegram_mesaj_gonder("🚀 Tarık Bey, sistem mühürlendi ve Telegram bağlantısı başarıyla sağlandı!")
     kurumsal_akis_sistemi()
     orta_vade_sepet_sistemi()
