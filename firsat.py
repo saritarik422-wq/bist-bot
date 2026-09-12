@@ -257,3 +257,17 @@ if __name__ == "__main__":
     
     # Ardından orta vadeli sepet modülü devreye girer
     orta_vade_sepet_sistemi()
+# --- Test / Çalışma Bildirimi ---
+import os
+import requests
+
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
+
+if TELEGRAM_TOKEN and CHAT_ID:
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": "🟢 firsat.py (Orta Vadeli Radar) başarıyla çalıştı!"
+    }
+    requests.post(url, json=payload)
