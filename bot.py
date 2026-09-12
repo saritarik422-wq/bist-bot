@@ -177,7 +177,6 @@ def orta_vade_sepet_sistemi():
             onceki_fiyat = float(data['Close'].iloc[-2])
             gunluk_degisim = ((son_fiyat - onceki_fiyat) / onceki_fiyat) * 100
 
-            # SMA50 Trend Süzgeci (Orta Vade Ana Yön)
             data['SMA50'] = data['Close'].rolling(window=50).mean()
             sma50_deger = float(data['SMA50'].iloc[-1])
             ana_trend_ustunde = bool(son_fiyat > sma50_deger)
@@ -252,8 +251,5 @@ def orta_vade_sepet_sistemi():
 
 
 if __name__ == "__main__":
-    # Önce günlük mühürlü bot çalışır
     kurumsal_akis_sistemi()
-    
-    # Ardından orta vadeli sepet modülü devreye girer
     orta_vade_sepet_sistemi()
