@@ -26,10 +26,6 @@ def telegram_mesaj_gonder(mesaj):
     except Exception as e:
         print(f"Telegram mesajı gönderilemedi: {e}")
 
-def telegram_test_mesaji_gonder():
-    # Botun çalıştığını ve bağlantıyı test etmek için atılan o ilk mühürlü test mesajı
-    test_metni = "🔔 *Sistem Test Başlatıldı*\n📻 *Test Test* - Bağlantı ve Telegram entegrasyonu aktif."
-    telegram_mesaj_gonder(test_metni)
 
 def tum_bist_hisselerini_getir():
     bist_evreni = [
