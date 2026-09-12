@@ -2,19 +2,18 @@ import os
 import subprocess
 import sys
 
-# Sigorta Mekanizması: Ortamda eksik paket varsa anında otomatik kurar
-for package in ["requests", "yfinance", "pandas", "numpy", "pandas-ta"]:
+# Sigorta Mekanizması: Sadece temel ve kesin çalışan paketler
+for package in ["requests", "yfinance", "pandas", "numpy"]:
     try:
-        __import__(package.replace("-ta", "_ta"))
+        __import__(package)
     except ImportError:
         subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 import requests
 import yfinance as yf
 import pandas as pd
-import pandas_ta as ta
+import numpy as np
 
-# Telegram Ayarları (GitHub Secrets'tan otomatik alınır)
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
@@ -34,6 +33,24 @@ def send_telegram_message(message):
     except Exception as e:
         print(f"Telegram mesajı gönderilemedi: {e}")
 
+def calculate_rsi(series, period=14):
+    delta = series.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+    rs = gain / loss
+    return 100 - (100 / (1 + rs))
+
+def calculate_supertrend(df, period=7, multiplier=3):
+    hl2 = (df['High'] + df['Low']) / 2
+    atr = (df['High'] - df['Low']).rolling(window=period).mean()
+    upperband = hl2 + (multiplier * atr)
+    lowerband = hl2 - (multiplier * atr)
+    
+    # Basitleştirilmiş SuperTrend yön tespiti
+    close = df['Close']
+    st_dir = 1 if close.iloc[-1] > lowerband.iloc[-1] else -1
+    return st_dir
+
 def analyze_stock(ticker_symbol):
     try:
         df = yf.download(ticker_symbol, period="3mo", interval="1d", progress=False)
@@ -43,25 +60,10 @@ def analyze_stock(ticker_symbol):
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.get_level_values(0)
 
-        # Profesyonel İndikatörler (pandas-ta)
-        df['RSI'] = ta.rsi(df['Close'], length=14)
-        
-        macd = ta.macd(df['Close'])
-        if macd is not None and not macd.empty:
-            df['MACD'] = macd.iloc[:, 0]
-        else:
-            df['MACD'] = 0
-
-        st = ta.supertrend(df['High'], df['Low'], df['Close'], length=7, multiplier=3)
-        if st is not None and not st.empty:
-            st_dir_col = [c for c in st.columns if 'SUPERTd_' in c]
-            supertrend_dir = st[st_dir_col[0]].iloc[-1] if st_dir_col else 1
-        else:
-            supertrend_dir = 1
+        df['RSI'] = calculate_rsi(df['Close'], 14)
+        supertrend_dir = calculate_supertrend(df, 7, 3)
 
         last = df.iloc[-1]
-        
-        # Hacim Analizi
         vol_sma = df['Volume'].rolling(window=20).mean().iloc[-1]
         is_volume_spike = last['Volume'] > (1.5 * vol_sma) if vol_sma > 0 else False
 
