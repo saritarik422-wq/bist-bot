@@ -163,7 +163,7 @@ def kurumsal_akis_sistemi():
             # --- Test / Çalışma Bildirimi 
 
     
-    payload = {
+    
         "chat_id": CHAT_ID,
         "text": "🟢 bot.py başarıyla çalıştı ve taramayı tamamladı!"
     }
