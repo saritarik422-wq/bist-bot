@@ -2,5 +2,4 @@ requests
 yfinance
 pandas
 numpy
-
-
+feedparser
