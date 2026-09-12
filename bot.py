@@ -165,7 +165,7 @@ def kurumsal_akis_sistemi():
     
     
         
-        "text": "🟢 bot.py başarıyla çalıştı ve taramayı tamamladı!"
+        
     
     requests.post(url, json=payload)
 
