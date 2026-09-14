@@ -2,7 +2,7 @@ name: Dual-Engine Trade System
 
 on:
   schedule:
-    - cron: '30 10 * * 1-5'  # TR Saati ile 13:30
+    - cron: '30 6,7,10,11 * * 1-5'  # TR Saati ile 13:30
   workflow_dispatch:
 
 jobs:
