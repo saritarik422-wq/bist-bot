@@ -216,7 +216,7 @@ if __name__ == "__main__":
         # 1. Alpha-Prime Hisse Taraması
         alpha_prime_ultimate_motoru()
         
-        # 2. Fortress Fon Sinyal Raporu ve Dağılımı
+        # 2. Fortress Fon Sinyal Raporu
         durum, aktif_sepet = fon_karar_mekanizmasi()
         
         # Fonları alt alta net bir liste halinde hazırlayalım
@@ -233,6 +233,8 @@ if __name__ == "__main__":
         
     except Exception as e:
         print(f"Kritik Başlatma Hatası: {e}")
+
+
 
 
 
