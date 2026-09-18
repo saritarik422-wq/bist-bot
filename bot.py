@@ -184,7 +184,24 @@ def alpha_prime_ultimate_motoru():
 
 if __name__ == "__main__":
     try:
-        telegram_mesaj_gonder("🔔 *Sistem Başlatıldı:* Alpha-Prime Ultimate Kurumsal Motor ve Mesaj Güvence Katmanı Devrede!")
+        telegram_mesaj_gonder("🔔 *Sistem Başlatıldı*...")
+        
+        # 1. Önce Alpha-Prime Hisse Taramasını Çalıştır
         alpha_prime_ultimate_motoru()
+        
+        # 2. Ardından Fortress Fon Karar Mekanizmasını Çalıştır ve Raporla
+        durum, aktif_sepet = fon_karar_mekanizmasi()
+        fon_raporu = (
+            f"🛡️ **FORTRESS FON DURUM RAPORU** 🛡️\n\n"
+            f"📊 **BIST100 Trend:** {durum}\n"
+            f"🧺 **Aktif Fon Sepeti:** {', '.join(aktif_sepet)}"
+        )
+        print(fon_raporu)
+        telegram_mesaj_gonder(fon_raporu)
+        
     except Exception as e:
         print(f"Kritik Başlatma Hatası: {e}")
+
+
+
+
