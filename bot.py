@@ -208,28 +208,17 @@ def alpha_prime_ultimate_motoru():
 if __name__ == "__main__":
     try:
         telegram_mesaj_gonder("🔔 *Sistem Başlatıldı*...")
-        
-        try:
-            alpha_prime_ultimate_motoru()
-        except Exception as e:
-            print(f"Alpha-Prime Motor Hatası: {e}")
+        alpha_prime_ultimate_motoru()
         
         durum, aktif_sepet = fon_karar_mekanizmasi()
+        fon_listesi = "\n".join([f"  • *{fon}* (Aktif)" for fon in aktif_sepet])
         
-        fon_listesi_str = "\n".join([f"  • *{fon}* (Aktif / Değerlendirilebilir)" for fon in aktif_sepet])
-        
-        fon_raporu = (
-            f"🛡️ *FORTRESS FON SİNYAL RAPORU* 🛡️\n\n"
-            f"📊 *Piyasa Durumu:* {durum}\n"
-            f"🎯 *İşlem Yapılacak Fon Sepeti:*\n{fon_listesi_str}\n\n"
-            f"_*(Sistem onay veren aktif fonları listeler.)*"
-        )
-        print(fon_raporu)
-        telegram_mesaj_gonder(fon_raporu)
-        
+        rapor = f"🛡️ *FORTRESS FON RAPORU* 🛡️\n\n📊 Durum: {durum}\n🎯 Sepet:\n{fon_listesi}"
+        print(rapor)
+        telegram_mesaj_gonder(rapor)
     except Exception as e:
-        print(f"Kritik Çalıştırma Hatası: {e}")
-        telegram_mesaj_gonder(f"⚠️ Kritik Hata: {e}")
+        print(f"Hata: {e}")
+
 
 
 
