@@ -1,4 +1,3 @@
-# --- FORTRESS FON YÖNETİCİSİ ---
 STABLE_FUNDS = ["KPC", "KTM", "KTV", "KCV", "KZL"]
 GROWTH_FUNDS = ["KTJ", "KNJ", "TVE", "KGM"]
 
@@ -23,9 +22,6 @@ def fon_karar_mekanizmasi():
     except Exception as e:
         print(f"Fon karar mekanizması hatası: {e}")
         return "HATA", GROWTH_FUNDS
-
-
-
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -213,10 +209,11 @@ if __name__ == "__main__":
     try:
         telegram_mesaj_gonder("🔔 *Sistem Başlatıldı*...")
         
-        # 1. Alpha-Prime Hisse Taraması
-        alpha_prime_ultimate_motoru()
+        try:
+            alpha_prime_ultimate_motoru()
+        except Exception as e:
+            print(f"Alpha-Prime Motor Hatası: {e}")
         
-        # 2. Fortress Fon Sinyal Raporu (Garanti Çalıştırma)
         durum, aktif_sepet = fon_karar_mekanizmasi()
         
         fon_listesi_str = "\n".join([f"  • *{fon}* (Aktif / Değerlendirilebilir)" for fon in aktif_sepet])
