@@ -24,6 +24,8 @@ def fon_karar_mekanizmasi():
         print(f"Fon karar mekanizması hatası: {e}")
         return "HATA", GROWTH_FUNDS
 
+
+
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -211,21 +213,27 @@ if __name__ == "__main__":
     try:
         telegram_mesaj_gonder("🔔 *Sistem Başlatıldı*...")
         
-        # 1. Önce Alpha-Prime Hisse Taramasını Çalıştır
+        # 1. Alpha-Prime Hisse Taraması
         alpha_prime_ultimate_motoru()
         
-        # 2. Ardından Fortress Fon Karar Mekanizmasını Çalıştır ve Raporla
+        # 2. Fortress Fon Sinyal Raporu
         durum, aktif_sepet = fon_karar_mekanizmasi()
+        
+        # Fonları alt alta net bir liste halinde hazırlayalım
+        fon_listesi_str = "\n".join([f"  • *{fon}* (Aktif / Değerlendirilebilir)" for fon in aktif_sepet])
+        
         fon_raporu = (
-            f"🛡️ **FORTRESS FON DURUM RAPORU** 🛡️\n\n"
-            f"📊 **BIST100 Trend:** {durum}\n"
-            f"🧺 **Aktif Fon Sepeti:** {', '.join(aktif_sepet)}"
+            f"🛡️ *FORTRESS FON SİNYAL RAPORU* 🛡️\n\n"
+            f"📊 *Piyasa Durumu:* {durum}\n"
+            f"🎯 *İşlem Yapılacak Fon Sepeti:*\n{fon_listesi_str}\n\n"
+            f"_*(Sistem onay veren aktif fonları listeler.)*"
         )
         print(fon_raporu)
         telegram_mesaj_gonder(fon_raporu)
         
     except Exception as e:
         print(f"Kritik Başlatma Hatası: {e}")
+
 
 
 
