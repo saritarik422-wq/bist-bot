@@ -1,3 +1,4 @@
+from fon_yoneticisi import STABLE_FUNDS, GROWTH_FUNDS, fon_karar_mekanizmasi
 import os
 import requests
 import yfinance as yf
