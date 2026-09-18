@@ -1,4 +1,29 @@
-from fon_yoneticisi import STABLE_FUNDS, GROWTH_FUNDS, fon_karar_mekanizmasi
+# --- FORTRESS FON YÖNETİCİSİ ---
+STABLE_FUNDS = ["KPC", "KTM", "KTV", "KCV", "KZL"]
+GROWTH_FUNDS = ["KTJ", "KNJ", "TVE", "KGM"]
+
+def fon_karar_mekanizmasi():
+    try:
+        bist = yf.download("XU100.IS", period="3mo", progress=False)
+        if bist.empty:
+            return "VERI_YOK", GROWTH_FUNDS
+        
+        close_prices = bist['Close']
+        if isinstance(close_prices, pd.DataFrame):
+            close_prices = close_prices.iloc[:, 0]
+            
+        sma50 = close_prices.rolling(window=50).mean()
+        son_fiyat = float(close_prices.iloc[-1])
+        son_sma50 = float(sma50.iloc[-1])
+        
+        if son_fiyat > son_sma50:
+            return "BIST100 SMA50 ÜSTÜNDE (BULL/GROWTH)", GROWTH_FUNDS
+        else:
+            return "BIST100 SMA50 ALTINDA (BEAR/STABLE)", STABLE_FUNDS
+    except Exception as e:
+        print(f"Fon karar mekanizması hatası: {e}")
+        return "HATA", GROWTH_FUNDS
+
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
