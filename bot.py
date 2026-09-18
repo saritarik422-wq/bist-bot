@@ -216,10 +216,9 @@ if __name__ == "__main__":
         # 1. Alpha-Prime Hisse Taraması
         alpha_prime_ultimate_motoru()
         
-        # 2. Fortress Fon Sinyal Raporu
+        # 2. Fortress Fon Sinyal Raporu (Garanti Çalıştırma)
         durum, aktif_sepet = fon_karar_mekanizmasi()
         
-        # Fonları alt alta net bir liste halinde hazırlayalım
         fon_listesi_str = "\n".join([f"  • *{fon}* (Aktif / Değerlendirilebilir)" for fon in aktif_sepet])
         
         fon_raporu = (
@@ -232,7 +231,9 @@ if __name__ == "__main__":
         telegram_mesaj_gonder(fon_raporu)
         
     except Exception as e:
-        print(f"Kritik Başlatma Hatası: {e}")
+        print(f"Kritik Çalıştırma Hatası: {e}")
+        telegram_mesaj_gonder(f"⚠️ Kritik Hata: {e}")
+
 
 
 
